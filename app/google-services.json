@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1054913907114",
+    "project_id": "duanbanhangthuctap-94f71",
+    "storage_bucket": "duanbanhangthuctap-94f71.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1054913907114:android:a35c1e0ae7edf6878a83d3",
+        "android_client_info": {
+          "package_name": "com.example.quantri_banhang"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbGBd5qCGdCFEyj0mzzfeWDOPcOToxpnk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
