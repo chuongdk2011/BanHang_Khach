@@ -1,18 +1,32 @@
 {
   "project_info": {
     "project_number": "1054913907114",
+    "firebase_url": "https://duanbanhangthuctap-94f71-default-rtdb.firebaseio.com",
     "project_id": "duanbanhangthuctap-94f71",
     "storage_bucket": "duanbanhangthuctap-94f71.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1054913907114:android:a35c1e0ae7edf6878a83d3",
+        "mobilesdk_app_id": "1:1054913907114:android:69a67f0605fed6db8a83d3",
         "android_client_info": {
-          "package_name": "com.example.quantri_banhang"
+          "package_name": "com.example.banhang_khach"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1054913907114-72mmjm3ra0k5h97b2lsbs20i4ngc3v65.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.banhang_khach",
+            "certificate_hash": "e1a5b1f574b77c6630bcedbb83ea6ac8a1ef05fe"
+          }
+        },
+        {
+          "client_id": "1054913907114-g2qdpjbl6c6ughprmmvrqs9cdlf1gcij.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCbGBd5qCGdCFEyj0mzzfeWDOPcOToxpnk"
@@ -20,7 +34,65 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1054913907114-0vvasdp32bepq0tp6sc25l8b4gtu5sfq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1054913907114:android:a35c1e0ae7edf6878a83d3",
+        "android_client_info": {
+          "package_name": "com.example.quantri_banhang"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1054913907114-804ms25f8plopadv7jcg6vhtremers2s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.quantri_banhang",
+            "certificate_hash": "2fa1efbe4899497887d788acebb8353dc41384f0"
+          }
+        },
+        {
+          "client_id": "1054913907114-c236t189i0snbe964c3gahml5pjub8cq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.quantri_banhang",
+            "certificate_hash": "acd31b1ae92eaeb3b1b52df95b2abd731422bd52"
+          }
+        },
+        {
+          "client_id": "1054913907114-f5k35evijmsad61oa8appemt0b8geb4a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.quantri_banhang",
+            "certificate_hash": "e1a5b1f574b77c6630bcedbb83ea6ac8a1ef05fe"
+          }
+        },
+        {
+          "client_id": "1054913907114-g2qdpjbl6c6ughprmmvrqs9cdlf1gcij.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbGBd5qCGdCFEyj0mzzfeWDOPcOToxpnk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1054913907114-0vvasdp32bepq0tp6sc25l8b4gtu5sfq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
