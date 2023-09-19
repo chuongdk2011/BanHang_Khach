@@ -4,12 +4,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.denzcoskun.imageslider.ImageSlider;
+import com.denzcoskun.imageslider.constants.ScaleTypes;
+import com.denzcoskun.imageslider.interfaces.ItemClickListener;
+import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.banhang_khach.Adapter.ProAdapter;
 import com.example.banhang_khach.DTO.DTO_QlySanPham;
 import com.example.banhang_khach.R;
@@ -28,6 +33,7 @@ public class fragment_trangchu extends Fragment {
     ArrayList<DTO_QlySanPham> list;
     ProAdapter adapter;
     RecyclerView rcv_pro;
+    ImageSlider image_slide;
     public static fragment_trangchu newInstance(){
         fragment_trangchu fragment = new fragment_trangchu();
 
@@ -44,6 +50,29 @@ public class fragment_trangchu extends Fragment {
         getDataPro();
         adapter = new ProAdapter(getContext(),list);
         rcv_pro.setAdapter(adapter);
+
+        image_slide = viewok.findViewById(R.id.image_slider);
+
+        ArrayList<SlideModel> images = new ArrayList<>();
+        images.add(new SlideModel(R.drawable.item_pro,"Áo Đẹp",null));
+        images.add(new SlideModel(R.drawable.item_pro,"Áo Đẹp",null));
+        images.add(new SlideModel(R.drawable.item_pro,"Áo Đẹp",null));
+        images.add(new SlideModel(R.drawable.item_pro,"Áo Đẹp",null));
+        images.add(new SlideModel(R.drawable.item_pro,"Áo Đẹp",null));
+
+        image_slide.setImageList(images, ScaleTypes.CENTER_CROP);
+
+        image_slide.setItemClickListener(new ItemClickListener() {
+            @Override
+            public void onItemSelected(int i) {
+                Toast.makeText(getContext(), "Ảnh Slide  số "+i, Toast.LENGTH_SHORT).show();
+
+            }
+            @Override
+            public void doubleClick(int i) {
+
+            }
+        });
 
         return viewok;
     }

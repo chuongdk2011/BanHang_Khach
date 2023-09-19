@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="10dp"
     android:layout_marginLeft="5dp"
-    android:layout_marginTop="5dp">
+    android:layout_marginTop="8dp">
     
     <LinearLayout
         android:id="@+id/id_chitietsp"
@@ -19,10 +19,18 @@
             android:src="@drawable/item_pro"
             android:id="@+id/img_pro"/>
         <TextView
+            android:id="@+id/tv_namepro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Tên Áo"
+            android:textColor="@color/black"
+            android:textSize="19sp" />
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="123.435đ"
-            android:gravity="center"
+
             android:padding="7dp"
             android:textSize="18sp"
             android:textColor="#FD2D2D"
