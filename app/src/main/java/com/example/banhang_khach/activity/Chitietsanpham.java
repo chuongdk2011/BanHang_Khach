@@ -1,4 +1,4 @@
-package com.example.banhang_khach.Activity;
+package com.example.banhang_khach.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
