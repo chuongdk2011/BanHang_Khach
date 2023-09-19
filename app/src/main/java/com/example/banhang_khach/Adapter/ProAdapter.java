@@ -49,7 +49,7 @@ public class ProAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
         float giatien = Float.parseFloat(sanPham.getPrice());
         viewHolder.tv_gia.setText(decimalFormat.format(giatien)+"đ");
-
+        viewHolder.tv_namepro.setText(sanPham.getName());
         Glide.with(context).load(sanPham.getImage()).centerCrop().into(viewHolder.img_pro);
 
         viewHolder.ll_chitietsp.setOnClickListener(new View.OnClickListener() {
@@ -74,7 +74,7 @@ public class ProAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
 
     public class ItemViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_gia;
+        TextView tv_gia,tv_namepro;
         ImageView img_pro;
 
         LinearLayout ll_chitietsp;
@@ -85,7 +85,7 @@ public class ProAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             tv_gia = view.findViewById(R.id.tv_giatien);
             img_pro = view.findViewById(R.id.img_pro);
             ll_chitietsp = view.findViewById(R.id.id_chitietsp);
-
+            tv_namepro = view.findViewById(R.id.tv_namepro);
         }
 
     }

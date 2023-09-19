@@ -44,7 +44,7 @@ dependencies {
     implementation 'com.facebook.android:facebook-android-sdk:[8,9)'
 
     implementation("com.google.firebase:firebase-auth")
-
+    implementation 'com.github.denzcoskun:ImageSlideshow:0.1.2'
     implementation 'com.google.firebase:firebase-storage'
     implementation("com.google.android.gms:play-services-auth:20.7.0")
 
