@@ -1,16 +1,19 @@
 package com.example.banhang_khach.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.banhang_khach.Activity.Chitietsanpham;
 import com.example.banhang_khach.DTO.DTO_QlySanPham;
 import com.example.banhang_khach.R;
 
@@ -49,6 +52,19 @@ public class ProAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
         Glide.with(context).load(sanPham.getImage()).centerCrop().into(viewHolder.img_pro);
 
+        viewHolder.ll_chitietsp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Context context1 = view.getContext();
+                Intent intent = new Intent(context1, Chitietsanpham.class);
+                intent.putExtra("id_product", sanPham.getId_product());
+                intent.putExtra("name", sanPham.getName());
+                intent.putExtra("price", sanPham.getPrice());
+                intent.putExtra("information", sanPham.getInformation());
+                context1.startActivity(intent);
+            }
+        });
+
     }
 
     @Override
@@ -61,13 +77,14 @@ public class ProAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         TextView tv_gia;
         ImageView img_pro;
 
-
+        LinearLayout ll_chitietsp;
 
         public ItemViewHolder(View view) {
             super(view);
 
             tv_gia = view.findViewById(R.id.tv_giatien);
             img_pro = view.findViewById(R.id.img_pro);
+            ll_chitietsp = view.findViewById(R.id.id_chitietsp);
 
         }
 
