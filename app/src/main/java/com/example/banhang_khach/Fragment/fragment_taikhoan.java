@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.banhang_khach.R;
 import com.example.banhang_khach.activity.LoginActivity;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -49,6 +50,8 @@ public class fragment_taikhoan extends Fragment {
 
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
+
+                LoginManager.getInstance().logOut();
             }
         });
     }

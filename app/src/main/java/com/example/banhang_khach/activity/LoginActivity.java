@@ -70,6 +70,14 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        if (accessToken != null && !accessToken.isExpired()){
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            finishAffinity();
+        }
+
+
         FacebookSdk.sdkInitialize(getApplicationContext());
 
 
@@ -81,6 +89,9 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.d(TAG, "facebook:onSuccess:" + loginResult);
+
+
+                Log.e("abc", "onSuccess: "+ loginResult.getAccessToken() );
                 handleFacebookAccessToken(loginResult.getAccessToken());
             }
 
@@ -165,6 +176,10 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser != null){
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            finishAffinity();
+        }
     }
 
     private void loginWithGG() {
@@ -227,7 +242,7 @@ public class LoginActivity extends AppCompatActivity {
     private void handleFacebookAccessToken(AccessToken token) {
 
         progressDialog.show();
-        Log.d(TAG, "handleFacebookAccessToken:" + token);
+        Log.d("abc", "handleFacebookAccessToken:" + token);
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         auth.signInWithCredential(credential)
@@ -244,7 +259,8 @@ public class LoginActivity extends AppCompatActivity {
                             map.put("id", user.getUid());
                             map.put("fullname", user.getDisplayName());
                             map.put("email",user.getEmail());
-                            map.put("phone",user.getPhoneNumber());
+                            Log.e(TAG, "onComplete: " + user.getPhoneNumber() );
+                            map.put("phone",String.valueOf(user.getPhoneNumber()));
                             map.put("role","User");
 
 
@@ -252,8 +268,6 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Login Email Success.", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finishAffinity();
-
-
 
                         } else {
                             // If sign in fails, display a message to the user.
