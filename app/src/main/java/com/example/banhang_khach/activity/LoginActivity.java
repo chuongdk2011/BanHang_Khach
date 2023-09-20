@@ -259,8 +259,7 @@ public class LoginActivity extends AppCompatActivity {
                             map.put("id", user.getUid());
                             map.put("fullname", user.getDisplayName());
                             map.put("email",user.getEmail());
-                            Log.e(TAG, "onComplete: " + user.getPhoneNumber() );
-                            map.put("phone",String.valueOf(user.getPhoneNumber()));
+                            Log.e("abc", "onComplete: " + user.getEmail() );
                             map.put("role","User");
 
 
