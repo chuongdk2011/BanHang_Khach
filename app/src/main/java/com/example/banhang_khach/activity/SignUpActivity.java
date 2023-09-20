@@ -102,6 +102,7 @@ public class SignUpActivity extends AppCompatActivity {
                 });
     }
 
+    String abc;
     void validate(){
         String pass = edpasswd.getText().toString();
         String repass = edrepasswd.getText().toString();
