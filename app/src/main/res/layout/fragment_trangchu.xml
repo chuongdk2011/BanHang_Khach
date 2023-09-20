@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:background="@drawable/bg_menu5"
+        android:background="@drawable/img_3"
         android:orientation="vertical">
 
         <LinearLayout
@@ -33,7 +33,14 @@
                 android:layout_weight="10"
                 android:background="@drawable/style_searchview"
                 android:padding="2dp"/>
+            <Spinner
+                android:id="@+id/spn_locsp"
+                android:layout_width="wrap_content"
+                android:layout_height="52dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
 
+               />
             <ImageView
                 android:id="@+id/img_cart"
                 android:layout_width="30dp"
