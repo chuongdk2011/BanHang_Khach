@@ -1,15 +1,15 @@
 package com.example.banhang_khach.DTO;
 
 public class DTO_QlySanPham {
-    String id_product;
+    String id;
     String image,name,price,information,category;
     int number;
 
     public DTO_QlySanPham() {
     }
 
-    public DTO_QlySanPham(String id_product, String image, String name, String price, String information, String category, int number) {
-        this.id_product = id_product;
+    public DTO_QlySanPham(String id, String image, String name, String price, String information, String category, int number) {
+        this.id = id;
         this.image = image;
         this.name = name;
         this.price = price;
@@ -18,12 +18,12 @@ public class DTO_QlySanPham {
         this.number = number;
     }
 
-    public String getId_product() {
-        return id_product;
+    public String getId() {
+        return id;
     }
 
-    public void setId_product(String id_product) {
-        this.id_product = id_product;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getImage() {
