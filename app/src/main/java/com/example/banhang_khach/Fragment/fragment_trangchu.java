@@ -1,11 +1,13 @@
 package com.example.banhang_khach.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -23,6 +25,7 @@ import com.example.banhang_khach.Adapter.ProAdapter;
 import com.example.banhang_khach.DTO.CategoryDTO;
 import com.example.banhang_khach.DTO.DTO_QlySanPham;
 import com.example.banhang_khach.R;
+import com.example.banhang_khach.activity.CartOrderActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -46,6 +49,7 @@ public class fragment_trangchu extends Fragment {
     List<CategoryDTO> mlistCate;
     Spinner spn_locsp;
     SearchView sv_pro;
+    ImageView imgcart;
     public static fragment_trangchu newInstance(){
         fragment_trangchu fragment = new fragment_trangchu();
 
@@ -59,6 +63,14 @@ public class fragment_trangchu extends Fragment {
         rcv_pro = viewok.findViewById(R.id.rcv_pro);
         spn_locsp = viewok.findViewById(R.id.spn_locsp);
         sv_pro = viewok.findViewById(R.id.sv_pro);
+        imgcart = viewok.findViewById(R.id.img_cart);
+        imgcart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), CartOrderActivity.class);
+                startActivity(intent);
+            }
+        });
         sv_pro.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {

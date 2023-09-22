@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="10dp"
+    app:cardCornerRadius="20dp">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <CheckBox
+            android:id="@+id/cbk_giohang"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:id="@+id/img_itemgio"
+            android:layout_width="100dp"
+            android:layout_height="130dp"
+            android:layout_toRightOf="@id/cbk_giohang"/>
+
+        <TextView
+            android:id="@+id/tvnamesp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/img_itemgio"
+            android:text="Tên Sản phẩm"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:textSize="20dp"/>
+
+        <TextView
+            android:id="@+id/tvgia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/img_itemgio"
+            android:text="Giá Sản phẩm"
+            android:layout_marginTop="40dp"
+            android:layout_marginLeft="20dp"
+            android:textSize="20dp"
+            android:textColor="#C80B0B"/>
+
+        <ImageView
+            android:id="@+id/imgtru"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/horizontal_rule_24"
+            android:layout_below="@+id/tvgia"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/img_itemgio"
+            android:layout_marginLeft="20dp"/>
+
+        <TextView
+            android:id="@+id/tv_soluong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvgia"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@id/imgtru"
+            android:layout_marginLeft="10dp"
+            android:text="1"
+            android:textSize="20dp"/>
+
+        <ImageView
+            android:id="@+id/imgcong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/add_24"
+            android:layout_below="@+id/tvgia"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/tv_soluong"
+            android:layout_marginLeft="10dp"/>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

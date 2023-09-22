@@ -6,18 +6,30 @@ public class CartOrderDTO {
     String idCart;
     String id_product;
     String iduser;
+    String namesp;
     int soluong;
     double price;
+    String image;
 
     public CartOrderDTO() {
     }
 
-    public CartOrderDTO(String idCart, String id_product, String iduser, int soluong, double price) {
+    public CartOrderDTO(String idCart, String id_product, String iduser, String namesp, int soluong, double price, String image) {
         this.idCart = idCart;
         this.id_product = id_product;
         this.iduser = iduser;
+        this.namesp = namesp;
         this.soluong = soluong;
         this.price = price;
+        this.image = image;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getIdCart() {
@@ -58,5 +70,13 @@ public class CartOrderDTO {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public String getNamesp() {
+        return namesp;
+    }
+
+    public void setNamesp(String namesp) {
+        this.namesp = namesp;
     }
 }
