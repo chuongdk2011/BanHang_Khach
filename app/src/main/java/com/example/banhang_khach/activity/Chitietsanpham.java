@@ -152,8 +152,8 @@ public class Chitietsanpham extends AppCompatActivity {
         imgcong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (soluong <= 100){
-                    int soluong = Integer.parseInt(tvsoluong.getText().toString().trim()) + 1;
+                int soluong = Integer.parseInt(tvsoluong.getText().toString().trim()) + 1;
+                if (soluong < 101){
                     String slmoi = String.valueOf(soluong);
                     tvsoluong.setText(slmoi);
                 }
@@ -162,8 +162,8 @@ public class Chitietsanpham extends AppCompatActivity {
         imgtru.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int soluong = Integer.parseInt(tvsoluong.getText().toString().trim()) - 1;
                 if (soluong > 0){
-                    int soluong = Integer.parseInt(tvsoluong.getText().toString().trim()) - 1;
                     String slmoi = String.valueOf(soluong);
                     tvsoluong.setText(slmoi);
                 }
