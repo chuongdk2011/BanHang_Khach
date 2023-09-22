@@ -98,10 +98,10 @@ public class Chitietsanpham extends AppCompatActivity {
             }
         });
         rcv_pro =findViewById(R.id.rcv_pro);
-
         list= new ArrayList<>();
         getDataPro();
         adapter = new ProAdapter(Chitietsanpham.this,list);
+        rcv_pro.setNestedScrollingEnabled(false);
         rcv_pro.setAdapter(adapter);
 
         IMGaddCartOrder.setOnClickListener(new View.OnClickListener() {
