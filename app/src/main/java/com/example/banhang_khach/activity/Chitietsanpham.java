@@ -39,12 +39,13 @@ import java.util.UUID;
 public class Chitietsanpham extends AppCompatActivity {
     String TAG = "chitietsp";
     ImageView img_backsp, img_xemthem, img_pro;
-    TextView tv_motasp, tv_xemthem, tv_price, tv_name;
+    TextView tv_motasp, tv_xemthem, tv_price, tv_name, tv_dialogname, tv_dialogprice, tv_dialogsoluong;
     LinearLayout layout_xemthem, IMGaddCartOrder;
     ArrayList<DTO_QlySanPham> list;
     ProAdapter adapter;
     RecyclerView rcv_pro;
     int soluong;
+    int checkaddnull = 0, checkadd = 0;
     String idproduct,nameproduct, priceproduct, informationproduct, imageproduct, soluongkho;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +108,7 @@ public class Chitietsanpham extends AppCompatActivity {
         IMGaddCartOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AddCart();
+                CheckCart();
             }
         });
     }
@@ -122,7 +123,7 @@ public class Chitietsanpham extends AppCompatActivity {
         layout_xemthem = findViewById(R.id.layout_xemthem);
     }
 
-    public void AddCart(){
+    public void CheckCart(){
         final Dialog dialog1 = new Dialog(Chitietsanpham.this);
         dialog1.setContentView(R.layout.dialog_addcartorder);
         dialog1.setCancelable(false);
@@ -134,58 +135,44 @@ public class Chitietsanpham extends AppCompatActivity {
         }
 
         ImageView btn_close, imgpro, imgtru, imgcong;
-        TextView tvname, tvprice, tvsoluong;
         btn_close = dialog1.findViewById(R.id.btn_close);
         Button btn_addcart = dialog1.findViewById(R.id.btn_addcart);
-        tvsoluong = dialog1.findViewById(R.id.tv_soluong);
+        tv_dialogsoluong = dialog1.findViewById(R.id.tv_soluong);
         imgpro = dialog1.findViewById(R.id.img_pro);
-        tvname = dialog1.findViewById(R.id.tv_name);
-        tvprice = dialog1.findViewById(R.id.tv_price);
+        tv_dialogname = dialog1.findViewById(R.id.tv_name);
+        tv_dialogprice = dialog1.findViewById(R.id.tv_price);
         imgtru = dialog1.findViewById(R.id.imgtru);
         imgcong = dialog1.findViewById(R.id.imgcong);
 
         Glide.with(Chitietsanpham.this).load(imageproduct).centerCrop().into(imgpro);
-        tvname.setText("Tên: " + nameproduct);
-        tvprice.setText("Giá: " + priceproduct + "đ");
-        soluong = Integer.parseInt(tvsoluong.getText().toString().trim());
+        tv_dialogname.setText("Tên: " + nameproduct);
+        tv_dialogprice.setText("Giá: " + priceproduct + "đ");
+        soluong = Integer.parseInt(tv_dialogsoluong.getText().toString().trim());
         Log.d(TAG, "soluong: " + soluong);
         imgcong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int soluong = Integer.parseInt(tvsoluong.getText().toString().trim()) + 1;
+                int soluong = Integer.parseInt(tv_dialogsoluong.getText().toString().trim()) + 1;
                 if (soluong < 101){
                     String slmoi = String.valueOf(soluong);
-                    tvsoluong.setText(slmoi);
+                    tv_dialogsoluong.setText(slmoi);
                 }
             }
         });
         imgtru.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int soluong = Integer.parseInt(tvsoluong.getText().toString().trim()) - 1;
+                int soluong = Integer.parseInt(tv_dialogsoluong.getText().toString().trim()) - 1;
                 if (soluong > 0){
                     String slmoi = String.valueOf(soluong);
-                    tvsoluong.setText(slmoi);
+                    tv_dialogsoluong.setText(slmoi);
                 }
             }
         });
         btn_addcart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int soluong = Integer.parseInt(tvsoluong.getText().toString().trim());
-                double priceB = Double.parseDouble(priceproduct) * soluong;
-                UUID uuid = UUID.randomUUID();
-                String idu = uuid.toString().trim();
-                FirebaseAuth auth = FirebaseAuth.getInstance();
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference("CartOrder/" + idu);
-                CartOrderDTO cartOrderDTO = new CartOrderDTO(idu,idproduct, auth.getUid(),nameproduct, soluong, priceB, imageproduct);
-                myRef.setValue(cartOrderDTO, new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                        Toast.makeText(Chitietsanpham.this, "Thêm vào giỏ hàng thành công", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                AddCart();
                 dialog1.dismiss();
             }
         });
@@ -197,24 +184,35 @@ public class Chitietsanpham extends AppCompatActivity {
         });
         dialog1.show();
     }
+
+    private void AddCart(){
+        int soluong = Integer.parseInt(tv_dialogsoluong.getText().toString().trim());
+        double priceB = Double.parseDouble(priceproduct) * soluong;
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("CartOrder/" + idproduct);
+        CartOrderDTO cartOrderDTO = new CartOrderDTO("",idproduct, auth.getUid(),nameproduct, soluong, priceB, imageproduct);
+        myRef.setValue(cartOrderDTO, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                Toast.makeText(Chitietsanpham.this, "Thêm vào giỏ hàng thành công", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
     private void getDataPro() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("Products");
-
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for (DataSnapshot dataSnapshot :
                         snapshot.getChildren()) {
-
                     DTO_QlySanPham sanPham = dataSnapshot.getValue(DTO_QlySanPham.class);
                     list.add(sanPham);
                 }
-
                 adapter.notifyDataSetChanged();
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 

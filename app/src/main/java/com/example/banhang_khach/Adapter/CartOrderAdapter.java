@@ -1,32 +1,33 @@
 package com.example.banhang_khach.Adapter;
 
 import android.content.Context;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.banhang_khach.DTO.CartOrderDTO;
 import com.example.banhang_khach.R;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class CartOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class CartOrderAdapter extends BaseAdapter {
     String TAG = "cartorderadapter";
     Context context;
     ArrayList<CartOrderDTO> list;
 
-    OnclickCheck onclickCheck;
+    CartOrderAdapter.OnclickCheck onclickCheck;
+    ArrayList<String> arr = new ArrayList<>();
+
 
     public CartOrderAdapter(Context context, ArrayList<CartOrderDTO> list, OnclickCheck onclickCheck) {
         this.context = context;
@@ -34,53 +35,99 @@ public class CartOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         this.onclickCheck = onclickCheck;
     }
 
-    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View viewok = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cartorder, parent, false);
-        return new ItemViewHolder(viewok);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        CartOrderDTO cartOrderDTO = list.get(position);
-        CartOrderAdapter.ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
-        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
-        itemViewHolder.tvname.setText(cartOrderDTO.getNamesp());
-        itemViewHolder.tvprice.setText(decimalFormat.format(cartOrderDTO.getPrice()));
-        itemViewHolder.tvsoluong.setText(String.valueOf(cartOrderDTO.getSoluong()));
-        Glide.with(context).load(cartOrderDTO.getImage()).centerCrop().into(itemViewHolder.imgitemgio);
-        itemViewHolder.cbkcart.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b){
-                    onclickCheck.onCheckbox(cartOrderDTO);
-                }
-            }
-        });
-    }
-
-    @Override
-    public int getItemCount() {
+    public int getCount() {
         return list.size();
     }
 
-    public class ItemViewHolder extends RecyclerView.ViewHolder {
-        CheckBox cbkcart;
-        ImageView imgitemgio;
-        TextView tvname, tvprice, tvsoluong;
-        public ItemViewHolder(View view) {
-            super(view);
-            cbkcart = view.findViewById(R.id.cbk_giohang);
-            imgitemgio = view.findViewById(R.id.img_itemgio);
-            tvname = view.findViewById(R.id.tvnamesp);
-            tvprice = view.findViewById(R.id.tvgia);
-            tvsoluong = view.findViewById(R.id.tv_soluong);
+    @Override
+    public Object getItem(int i) {
+        CartOrderDTO cartOrderDTO = list.get(i);
+        return cartOrderDTO;
+    }
+
+    @Override
+    public long getItemId(int i) {
+        return i;
+    }
+
+    @Override
+    public View getView(int i, View view, ViewGroup viewGroup) {
+        View viewok;
+        if (view == null){
+            viewok = View.inflate(viewGroup.getContext(), R.layout.item_cartorder, null);
+        }else {
+            viewok = view;
         }
 
+        CartOrderDTO cartOrderDTO = list.get(i);
+        CheckBox cbkcart;
+        ImageView imgitemgio, imgtru, imgcong;
+        TextView tvname, tvprice, tvsoluong;
+        cbkcart = viewok.findViewById(R.id.cbk_giohang);
+        imgitemgio = viewok.findViewById(R.id.img_itemgio);
+        tvname = viewok.findViewById(R.id.tvnamesp);
+        tvprice = viewok.findViewById(R.id.tvgia);
+        tvsoluong = viewok.findViewById(R.id.tv_soluong);
+        imgtru = viewok.findViewById(R.id.imgtru);
+        imgcong = viewok.findViewById(R.id.imgcong);
+
+
+        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
+        tvname.setText(cartOrderDTO.getNamesp());
+        tvprice.setText(decimalFormat.format(cartOrderDTO.getPrice()));
+        tvsoluong.setText(String.valueOf(cartOrderDTO.getSoluong()));
+        Glide.with(context).load(cartOrderDTO.getImage()).centerCrop().into(imgitemgio);
+        cbkcart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (cbkcart.isChecked()){
+                    arr.add(cartOrderDTO.getId_product());
+                    onclickCheck.onCheckboxTrue(cartOrderDTO);
+                }else {
+                    arr.remove(cartOrderDTO.getId_product());
+                    onclickCheck.onCheckboxFalse(cartOrderDTO);
+                }
+                Log.d(TAG, "onClick: " + arr);
+                onclickCheck.onQuality(arr);
+            }
+        });
+        imgcong.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int soluong = Integer.parseInt(tvsoluong.getText().toString().trim()) + 1;
+                if (soluong < 101){
+                    String slmoi = String.valueOf(soluong);
+                    tvsoluong.setText(slmoi);
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference myRef = database.getReference("CartOrder/" + cartOrderDTO.getId_product());
+                    Map<String, Object> mapcartoder = new HashMap<>();
+                    mapcartoder.put("soluong", soluong);
+                    myRef.updateChildren(mapcartoder);
+                }
+            }
+        });
+        imgtru.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int soluong = Integer.parseInt(tvsoluong.getText().toString().trim()) - 1;
+                if (soluong > 0){
+                    String slmoi = String.valueOf(soluong);
+                    tvsoluong.setText(slmoi);
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference myRef = database.getReference("CartOrder/" + cartOrderDTO.getId_product());
+                    Map<String, Object> mapcartoder = new HashMap<>();
+                    mapcartoder.put("soluong", soluong);
+                    myRef.updateChildren(mapcartoder);
+                }
+            }
+        });
+        return viewok;
     }
 
     public interface OnclickCheck{
-        void onCheckbox(CartOrderDTO cartOrderDTO);
+        void onQuality(ArrayList<String> idcart);
+        void onCheckboxTrue(CartOrderDTO cartOrderDTO);
+        void onCheckboxFalse(CartOrderDTO cartOrderDTO);
     }
 }

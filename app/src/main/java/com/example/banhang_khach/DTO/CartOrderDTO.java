@@ -1,9 +1,7 @@
 package com.example.banhang_khach.DTO;
 
-import java.util.UUID;
-
 public class CartOrderDTO {
-    String idCart;
+    String idBill;
     String id_product;
     String iduser;
     String namesp;
@@ -14,8 +12,8 @@ public class CartOrderDTO {
     public CartOrderDTO() {
     }
 
-    public CartOrderDTO(String idCart, String id_product, String iduser, String namesp, int soluong, double price, String image) {
-        this.idCart = idCart;
+    public CartOrderDTO(String idBill, String id_product, String iduser, String namesp, int soluong, double price, String image) {
+        this.idBill = idBill;
         this.id_product = id_product;
         this.iduser = iduser;
         this.namesp = namesp;
@@ -24,20 +22,20 @@ public class CartOrderDTO {
         this.image = image;
     }
 
+    public String getIdBill() {
+        return idBill;
+    }
+
+    public void setIdBill(String idBill) {
+        this.idBill = idBill;
+    }
+
     public String getImage() {
         return image;
     }
 
     public void setImage(String image) {
         this.image = image;
-    }
-
-    public String getIdCart() {
-        return idCart;
-    }
-
-    public void setIdCart(String idCart) {
-        this.idCart = idCart;
     }
 
     public String getId_product() {

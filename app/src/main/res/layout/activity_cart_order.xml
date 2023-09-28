@@ -7,12 +7,19 @@
     tools:context=".activity.CartOrderActivity"
     android:orientation="vertical">
 
-    <androidx.recyclerview.widget.RecyclerView
+    <CheckBox
+        android:id="@+id/cbkok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Checkall"/>
+
+    <ListView
         android:id="@+id/rc_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:choiceMode="multipleChoice"
+        />
 
     <RelativeLayout
         android:layout_width="match_parent"
