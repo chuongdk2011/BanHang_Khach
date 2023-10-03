@@ -5,25 +5,17 @@ public class BillDTO {
     String iduser;
     double TotalPrice;
     String dateBuy;
-    String status;
+    int status;
 
     public BillDTO() {
     }
 
-    public BillDTO(String idBill,String iduser, double totalPrice, String dateBuy, String status) {
+    public BillDTO(String idBill, String iduser, double totalPrice, String dateBuy, int status) {
         this.idBill = idBill;
         this.iduser = iduser;
         TotalPrice = totalPrice;
         this.dateBuy = dateBuy;
         this.status = status;
-    }
-
-    public String getIduser() {
-        return iduser;
-    }
-
-    public void setIduser(String iduser) {
-        this.iduser = iduser;
     }
 
     public String getIdBill() {
@@ -32,6 +24,14 @@ public class BillDTO {
 
     public void setIdBill(String idBill) {
         this.idBill = idBill;
+    }
+
+    public String getIduser() {
+        return iduser;
+    }
+
+    public void setIduser(String iduser) {
+        this.iduser = iduser;
     }
 
     public double getTotalPrice() {
@@ -50,11 +50,11 @@ public class BillDTO {
         this.dateBuy = dateBuy;
     }
 
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 }

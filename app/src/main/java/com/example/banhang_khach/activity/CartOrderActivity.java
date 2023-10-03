@@ -95,11 +95,11 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
                     UUID uuid = UUID.randomUUID();
                     String udi = uuid.toString().trim();
                     FirebaseAuth auth = FirebaseAuth.getInstance();
-                    DateFormat df = new SimpleDateFormat("dd.mm.yyyy HH:mm:ss z");
+                    DateFormat df = new SimpleDateFormat("HH:mm dd.MM.yyyy ");
                     String date = df.format(Calendar.getInstance().getTime());
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference myRef_Bill = database.getReference("BillProdcut/" + udi);
-                    BillDTO billDTO = new BillDTO(udi, auth.getUid(), tongcart,date, "Đang xac nhận");
+                    DatabaseReference myRef_Bill = database.getReference("BillProduct/" + udi);
+                    BillDTO billDTO = new BillDTO(udi, auth.getUid(), tongcart,date, 1);
                     myRef_Bill.setValue(billDTO, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
