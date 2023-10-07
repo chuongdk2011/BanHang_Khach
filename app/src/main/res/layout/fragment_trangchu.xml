@@ -54,21 +54,30 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/id_layoutImage"
-            android:layout_width="match_parent"
+
+            app:cardMaxElevation="20dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardElevation="10dp"
+            android:outlineSpotShadowColor="#ECD408"
+            android:outlineAmbientShadowColor="#F8DF04"
+            android:layout_gravity="center_horizontal"
+
+
+
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             app:cardCornerRadius="15dp">
-
-            <com.denzcoskun.imageslider.ImageSlider
-                android:id="@+id/image_slider"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                app:iss_auto_cycle="true"
-                app:iss_delay="1000"
-                app:iss_period="1000"
-                app:iss_text_align="CENTER"
-
-                />
+               <com.denzcoskun.imageslider.ImageSlider
+                   android:id="@+id/image_slider"
+                   android:layout_width="match_parent"
+                   android:layout_height="200dp"
+                   app:iss_auto_cycle="true"
+                   app:iss_delay="1000"
+                   app:iss_period="1000"
+                   app:iss_text_align="CENTER"
+                   android:layout_gravity="center_horizontal"
+                   />
         </androidx.cardview.widget.CardView>
 
 
