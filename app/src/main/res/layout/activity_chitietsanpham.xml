@@ -118,11 +118,13 @@
                android:padding="10dp"
                android:gravity="center">
            <ImageView
+               android:id="@+id/img_bl"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:src="@drawable/ic_chat"
                />
            <ImageView
+               android:id="@+id/img_favo_chi_tiet"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:layout_marginLeft="10dp"

@@ -26,15 +26,28 @@
             android:text="Tên Áo"
             android:textColor="@color/black"
             android:textSize="19sp" />
-        <TextView
+        <LinearLayout
+            android:gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="123.435đ"
-
-            android:padding="7dp"
-            android:textSize="18sp"
-            android:textColor="#FD2D2D"
-            android:id="@+id/tv_giatien"/>
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="123.435đ"
+                android:layout_weight="1"
+                android:padding="7dp"
+                android:textSize="18sp"
+                android:textColor="#FD2D2D"
+                android:id="@+id/tv_giatien"/>
+            <ImageView
+                android:id="@+id/img_fave"
+                android:layout_weight="1"
+                android:src="@drawable/no_favorite_24"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
     </LinearLayout>
     
 
