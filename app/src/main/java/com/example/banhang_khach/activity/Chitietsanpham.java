@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import com.example.banhang_khach.Adapter.ProAdapter;
 import com.example.banhang_khach.DTO.CartOrderDTO;
 import com.example.banhang_khach.DTO.DTO_QlySanPham;
 import com.example.banhang_khach.R;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -141,7 +143,15 @@ public class Chitietsanpham extends AppCompatActivity {
                     CheckCart();
                 }
             });
+            img_bl.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showComment();
+                }
+            });
         }
+
+
         public void Anhxa () {
             IMGaddCartOrder = findViewById(R.id.addCartOrder);
             img_pro = findViewById(R.id.img_pro);
@@ -154,6 +164,37 @@ public class Chitietsanpham extends AppCompatActivity {
             img_favo = findViewById(R.id.img_favo_chi_tiet);
             img_bl = findViewById(R.id.img_bl);
         }
+    private void showComment() {
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(Chitietsanpham.this);
+
+        View view = getLayoutInflater().inflate(R.layout.dialog_comment, null);
+        bottomSheetDialog.setContentView(view);
+
+
+        float screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
+        float halfScreenHeight = screenHeight / 1.5f;
+        View bottomSheetInternal = bottomSheetDialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+        if (bottomSheetInternal != null) {
+            ViewGroup.LayoutParams layoutParams = bottomSheetInternal.getLayoutParams();
+
+            if (layoutParams != null) {
+                layoutParams.height = (int) halfScreenHeight;
+                bottomSheetInternal.setLayoutParams(layoutParams);
+
+            }
+        }
+
+        ImageView img_close = view.findViewById(R.id.img_close);
+
+        img_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bottomSheetDialog.dismiss();
+            }
+        });
+
+        bottomSheetDialog.show();
+    }
 
         public void CheckCart () {
             final Dialog dialog1 = new Dialog(Chitietsanpham.this);

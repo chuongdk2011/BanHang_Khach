@@ -17,7 +17,8 @@
             android:layout_height="135dp"
             android:scaleType="fitXY"
             android:src="@drawable/item_pro"
-            android:id="@+id/img_pro"/>
+            android:id="@+id/img_pro"
+            android:adjustViewBounds="true"/>
         <TextView
             android:id="@+id/tv_namepro"
             android:layout_width="match_parent"
