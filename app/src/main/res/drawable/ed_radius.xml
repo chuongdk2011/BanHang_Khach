@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <!-- Màu nền của EditText -->
+            <solid android:color="#ECECEC" />
+            <!-- Đặt viền cho EditText -->
+            <stroke
+                android:width="2dp"
+                android:color="#ccc" />
+            <!-- Làm tròn các góc của EditText -->
+            <corners android:radius="10dp" />
+        </shape>
+    </item>
+</selector>
