@@ -68,6 +68,7 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
         myRefId.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                list.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()){
                     CartOrderDTO categoryDTO = dataSnapshot.getValue(CartOrderDTO.class);
                     Log.d(TAG, "list : " + categoryDTO.getPrice());
@@ -113,6 +114,7 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
                         myRef.updateChildren(mapcartoder);
                     }
                 }
+                tongtien.setText("Tổng tiền: ");
             }
         });
     }

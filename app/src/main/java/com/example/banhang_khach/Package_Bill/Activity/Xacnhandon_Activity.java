@@ -8,10 +8,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.banhang_khach.DTO.BillDTO;
 import com.example.banhang_khach.Package_Bill.Adapter.Bill_Adapter;
 import com.example.banhang_khach.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,6 +28,7 @@ public class Xacnhandon_Activity extends AppCompatActivity {
     Bill_Adapter adapter;
     ListView rc_listcart;
     ImageView id_back;
+    int sl = 0;
     public void Anhxa(){
         rc_listcart = findViewById(R.id.list_donhang);
         id_back = findViewById(R.id.id_back);
@@ -49,16 +52,21 @@ public class Xacnhandon_Activity extends AppCompatActivity {
 
     public void getdata(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        Log.d(TAG, "getdata: " + auth.getUid());
         DatabaseReference myRefId = database.getReference("BillProduct");
         myRefId.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                list.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()){
                     BillDTO billDTO = dataSnapshot.getValue(BillDTO.class);
-                    if (billDTO.getStatus() == 1){
+                    if (billDTO.getStatus() == 1 && auth.getUid().equals(billDTO.getIduser())){
+                        sl++;
                         list.add(billDTO);
                     }
                 }
+                Log.d(TAG, "onDataChange: " + sl);
                 adapter.notifyDataSetChanged();
             }
             @Override

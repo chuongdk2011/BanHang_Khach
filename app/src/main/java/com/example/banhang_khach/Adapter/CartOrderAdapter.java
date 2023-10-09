@@ -96,12 +96,17 @@ public class CartOrderAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 int soluong = Integer.parseInt(tvsoluong.getText().toString().trim()) + 1;
+                int giachia = (int) ((cartOrderDTO.getPrice()) / Integer.parseInt(tvsoluong.getText().toString().trim()));
+                int gianew = giachia * soluong;
                 if (soluong < 101){
                     String slmoi = String.valueOf(soluong);
+                    String pricenew = String.valueOf(gianew);
+                    tvprice.setText(pricenew);
                     tvsoluong.setText(slmoi);
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference myRef = database.getReference("CartOrder/" + cartOrderDTO.getId_product());
                     Map<String, Object> mapcartoder = new HashMap<>();
+                    mapcartoder.put("price", gianew);
                     mapcartoder.put("soluong", soluong);
                     myRef.updateChildren(mapcartoder);
                 }
@@ -111,12 +116,17 @@ public class CartOrderAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 int soluong = Integer.parseInt(tvsoluong.getText().toString().trim()) - 1;
+                int giachia = (int) ((cartOrderDTO.getPrice()) / Integer.parseInt(tvsoluong.getText().toString().trim()));
+                int gianew = giachia * soluong;
                 if (soluong > 0){
                     String slmoi = String.valueOf(soluong);
+                    String pricenew = String.valueOf(gianew);
+                    tvprice.setText(pricenew);
                     tvsoluong.setText(slmoi);
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference myRef = database.getReference("CartOrder/" + cartOrderDTO.getId_product());
                     Map<String, Object> mapcartoder = new HashMap<>();
+                    mapcartoder.put("price", gianew);
                     mapcartoder.put("soluong", soluong);
                     myRef.updateChildren(mapcartoder);
                 }

@@ -13,6 +13,7 @@ import android.widget.ListView;
 import com.example.banhang_khach.DTO.BillDTO;
 import com.example.banhang_khach.Package_Bill.Adapter.Bill_Adapter;
 import com.example.banhang_khach.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -50,14 +51,17 @@ public class Hoanthanhdon_Activity extends AppCompatActivity {
     }
 
     public void getdata(){
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        Log.d(TAG, "getdata: " + auth.getUid());
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRefId = database.getReference("BillProduct");
         myRefId.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                list.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()){
                     BillDTO billDTO = dataSnapshot.getValue(BillDTO.class);
-                    if (billDTO.getStatus() == 4){
+                    if (billDTO.getStatus() == 4 && auth.getUid().equals(billDTO.getIduser())){
                         list.add(billDTO);
                     }
                 }

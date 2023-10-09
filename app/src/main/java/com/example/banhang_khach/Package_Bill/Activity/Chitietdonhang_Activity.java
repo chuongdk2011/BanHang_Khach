@@ -1,8 +1,11 @@
 package com.example.banhang_khach.Package_Bill.Activity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.banhang_khach.DTO.CartOrderDTO;
 import com.example.banhang_khach.Package_Bill.Adapter.Chitietdonhang_Adapter;
@@ -18,9 +22,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Chitietdonhang_Activity extends AppCompatActivity {
     String TAG = "ChitietdonhangActivity";
@@ -28,7 +35,7 @@ public class Chitietdonhang_Activity extends AppCompatActivity {
     Chitietdonhang_Adapter adapter;
     ImageView id_back;
     ListView lvhoadon;
-    String idbill_hoadon;
+    String idbill_hoadon, id_userbill;
     int status;
     Button btnhuydonhang;
     public void Anhxa(){
@@ -51,17 +58,22 @@ public class Chitietdonhang_Activity extends AppCompatActivity {
         Intent intent = getIntent();
         idbill_hoadon = intent.getStringExtra("id_bill");
         status = intent.getIntExtra("status", 1);
+        id_userbill = intent.getStringExtra("");
         Log.d(TAG, "id_bill: " + status);
         list = new ArrayList<>();
         adapter = new Chitietdonhang_Adapter(Chitietdonhang_Activity.this, list);
         lvhoadon.setAdapter(adapter);
         if (status == 3){
-            btnhuydonhang.setEnabled(false);
-            btnhuydonhang.setText("Không thể hủy đơn");
+            btnhuydonhang.setVisibility(View.GONE);
         }else if (status == 4){
-            btnhuydonhang.setEnabled(false);
-            btnhuydonhang.setText("Cảm ơn quý khách");
+            btnhuydonhang.setVisibility(View.GONE);
         }
+        btnhuydonhang.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                huyBill();
+            }
+        });
         getdata();
     }
     public void getdata(){
@@ -85,4 +97,30 @@ public class Chitietdonhang_Activity extends AppCompatActivity {
         });
     }
 
+    public void huyBill(){
+        new AlertDialog.Builder(this)
+                .setTitle("Xóa hóa đơn")
+                .setMessage("Bản có chắc chắc muốn xóa đơn hàng này không ?")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+                        DatabaseReference myRefId = database.getReference("BillProduct/" + idbill_hoadon);
+                        myRefId.removeValue();
+                        for (int j = 0; j < list.size(); j++) {
+                            DatabaseReference myRef = database.getReference("CartOrder/" + list.get(j));
+                            myRef.removeValue(new DatabaseReference.CompletionListener() {
+                                @Override
+                                public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                    Toast.makeText(Chitietdonhang_Activity.this, "Xóa thành công", Toast.LENGTH_SHORT).show();
+
+                                }
+                            });
+                        }
+
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
 }
