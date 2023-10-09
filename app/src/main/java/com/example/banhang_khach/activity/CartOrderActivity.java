@@ -94,7 +94,7 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
                     UUID uuid = UUID.randomUUID();
                     String udi = uuid.toString().trim();
                     FirebaseAuth auth = FirebaseAuth.getInstance();
-                    DateFormat df = new SimpleDateFormat("HH:mm dd.MM.yyyy ");
+                    DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
                     String date = df.format(Calendar.getInstance().getTime());
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference myRef_Bill = database.getReference("BillProduct/" + udi);
