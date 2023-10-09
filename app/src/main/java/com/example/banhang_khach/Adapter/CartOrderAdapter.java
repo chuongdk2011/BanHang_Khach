@@ -27,7 +27,7 @@ public class CartOrderAdapter extends BaseAdapter {
 
     CartOrderAdapter.OnclickCheck onclickCheck;
     ArrayList<String> arr = new ArrayList<>();
-
+    int tonggia = 0;
 
     public CartOrderAdapter(Context context, ArrayList<CartOrderDTO> list, OnclickCheck onclickCheck) {
         this.context = context;
@@ -83,10 +83,14 @@ public class CartOrderAdapter extends BaseAdapter {
             public void onClick(View view) {
                 if (cbkcart.isChecked()){
                     arr.add(cartOrderDTO.getId_product());
-                    onclickCheck.onCheckboxTrue(cartOrderDTO);
+                    tonggia += cartOrderDTO.getPrice();
+                    Log.d(TAG, "tonggia + : " + tonggia);
+                    onclickCheck.onCheckboxTrue(tonggia);
                 }else {
                     arr.remove(cartOrderDTO.getId_product());
-                    onclickCheck.onCheckboxFalse(cartOrderDTO);
+                    tonggia -= cartOrderDTO.getPrice();
+                    Log.d(TAG, "tong gia -: " + tonggia);
+                    onclickCheck.onCheckboxFalse(tonggia);
                 }
                 Log.d(TAG, "onClick: " + arr);
                 onclickCheck.onQuality(arr);
@@ -101,6 +105,9 @@ public class CartOrderAdapter extends BaseAdapter {
                 if (soluong < 101){
                     String slmoi = String.valueOf(soluong);
                     String pricenew = String.valueOf(gianew);
+                    tonggia += giachia;
+                    Log.d(TAG, "tonggia = gianew + : " + tonggia);
+                    onclickCheck.onCheckboxTrue(tonggia);
                     tvprice.setText(pricenew);
                     tvsoluong.setText(slmoi);
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -121,6 +128,9 @@ public class CartOrderAdapter extends BaseAdapter {
                 if (soluong > 0){
                     String slmoi = String.valueOf(soluong);
                     String pricenew = String.valueOf(gianew);
+                    tonggia -= giachia;
+                    Log.d(TAG, "tonggia = gianew - : " + tonggia);
+                    onclickCheck.onCheckboxFalse(tonggia);
                     tvprice.setText(pricenew);
                     tvsoluong.setText(slmoi);
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -137,7 +147,8 @@ public class CartOrderAdapter extends BaseAdapter {
 
     public interface OnclickCheck{
         void onQuality(ArrayList<String> idcart);
-        void onCheckboxTrue(CartOrderDTO cartOrderDTO);
-        void onCheckboxFalse(CartOrderDTO cartOrderDTO);
+        void onCheckboxTrue(int tongtien);
+        void onCheckboxFalse(int tongtien);
+
     }
 }

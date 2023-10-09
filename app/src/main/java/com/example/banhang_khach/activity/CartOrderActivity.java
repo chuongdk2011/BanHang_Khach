@@ -27,7 +27,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -35,13 +34,12 @@ import java.util.UUID;
 public class CartOrderActivity extends AppCompatActivity implements CartOrderAdapter.OnclickCheck{
     String TAG = "cartoderactivity";
     ListView rc_listcart;
-    TextView tongtien;
+    TextView tongcart;
     Button btnmuahang;
     ArrayList<CartOrderDTO> list;
     CartOrderAdapter adapter;
-    double tongcart = 0;
-    String layidhoadon = "";
     int s = 0;
+    int tongprice = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +55,7 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
 
     public void Anhxa(){
         rc_listcart = findViewById(R.id.rc_view);
-        tongtien = findViewById(R.id.tv_tonggia);
+        tongcart = findViewById(R.id.tv_tonggia);
         btnmuahang = findViewById(R.id.btn_muahang);
     }
 
@@ -100,7 +98,7 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
                     String date = df.format(Calendar.getInstance().getTime());
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference myRef_Bill = database.getReference("BillProduct/" + udi);
-                    BillDTO billDTO = new BillDTO(udi, auth.getUid(), tongcart,date, 1);
+                    BillDTO billDTO = new BillDTO(udi, auth.getUid(), tongprice,date, 1);
                     myRef_Bill.setValue(billDTO, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
@@ -114,28 +112,23 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
                         myRef.updateChildren(mapcartoder);
                     }
                 }
-                tongtien.setText("Tổng tiền: ");
+                tongcart.setText("Tổng tiền: ");
             }
         });
     }
 
     @Override
-    public void onCheckboxTrue(CartOrderDTO cartOrderDTO) {
+    public void onCheckboxTrue(int tongtien) {
         s++;
-        Log.d(TAG, "s: " + s);
-        tongcart += cartOrderDTO.getPrice();
-        Log.d(TAG, "onCheckbox: " + tongcart);
-        tongtien.setText("Tổng tiền: " +String.valueOf(tongcart));
+        tongprice = tongtien;
+        tongcart.setText("Tổng tiền: " +String.valueOf(tongtien));
     }
 
     @Override
-    public void onCheckboxFalse(CartOrderDTO cartOrderDTO) {
+    public void onCheckboxFalse(int tongtien) {
         s--;
-        Log.d(TAG, "s: " + s);
-        tongcart -= cartOrderDTO.getPrice();
-        Log.d(TAG, "onCheckbox: " + tongcart);
-        tongtien.setText("Tổng tiền: " +String.valueOf(tongcart));
-        layidhoadon = "";
+        tongprice = tongtien;
+        tongcart.setText("Tổng tiền: " + String.valueOf(tongtien));
     }
 
 }
