@@ -1,6 +1,7 @@
 package com.example.banhang_khach.DTO;
 
 public class CartOrderDTO {
+    String idCart;
     String idBill;
     String id_product;
     String iduser;
@@ -12,7 +13,8 @@ public class CartOrderDTO {
     public CartOrderDTO() {
     }
 
-    public CartOrderDTO(String idBill, String id_product, String iduser, String namesp, int soluong, double price, String image) {
+    public CartOrderDTO(String idCart, String idBill, String id_product, String iduser, String namesp, int soluong, double price, String image) {
+        this.idCart = idCart;
         this.idBill = idBill;
         this.id_product = id_product;
         this.iduser = iduser;
@@ -20,6 +22,14 @@ public class CartOrderDTO {
         this.soluong = soluong;
         this.price = price;
         this.image = image;
+    }
+
+    public String getIdCart() {
+        return idCart;
+    }
+
+    public void setIdCart(String idCart) {
+        this.idCart = idCart;
     }
 
     public String getIdBill() {

@@ -218,12 +218,14 @@ public class Chitietsanpham extends AppCompatActivity {
         }
 
         private void AddCart () {
+            UUID uuid = UUID.randomUUID();
+            String idu = uuid.toString().trim();
             int soluong = Integer.parseInt(tv_dialogsoluong.getText().toString().trim());
             double priceB = Double.parseDouble(priceproduct) * soluong;
             FirebaseAuth auth = FirebaseAuth.getInstance();
             FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference myRef = database.getReference("CartOrder/" + idproduct);
-            CartOrderDTO cartOrderDTO = new CartOrderDTO("", idproduct, auth.getUid(), nameproduct, soluong, priceB, imageproduct);
+            DatabaseReference myRef = database.getReference("CartOrder/" + idu);
+            CartOrderDTO cartOrderDTO = new CartOrderDTO(idu,"", idproduct, auth.getUid(), nameproduct, soluong, priceB, imageproduct);
             myRef.setValue(cartOrderDTO, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {

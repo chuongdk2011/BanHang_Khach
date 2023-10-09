@@ -82,12 +82,12 @@ public class CartOrderAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 if (cbkcart.isChecked()){
-                    arr.add(cartOrderDTO.getId_product());
+                    arr.add(cartOrderDTO.getIdCart());
                     tonggia += cartOrderDTO.getPrice();
                     Log.d(TAG, "tonggia + : " + tonggia);
                     onclickCheck.onCheckboxTrue(tonggia);
                 }else {
-                    arr.remove(cartOrderDTO.getId_product());
+                    arr.remove(cartOrderDTO.getIdCart());
                     tonggia -= cartOrderDTO.getPrice();
                     Log.d(TAG, "tong gia -: " + tonggia);
                     onclickCheck.onCheckboxFalse(tonggia);
