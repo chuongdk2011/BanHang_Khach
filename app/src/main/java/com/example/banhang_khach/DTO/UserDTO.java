@@ -1,31 +1,31 @@
 package com.example.banhang_khach.DTO;
 
 public class UserDTO {
-    String iduser;
+    String id;
     String passwd;
     String fullname;
     int phone;
     String email;
-    String vaitro;
+    String role;
 
     public UserDTO() {
     }
 
     public UserDTO(String iduser, String passwd, String fullname, int phone, String email, String vaitro) {
-        this.iduser = iduser;
+        this.id = iduser;
         this.passwd = passwd;
         this.fullname = fullname;
         this.phone = phone;
         this.email = email;
-        this.vaitro = vaitro;
+        this.role = vaitro;
     }
 
-    public String getIduser() {
-        return iduser;
+    public String getId() {
+        return id;
     }
 
-    public void setIduser(String iduser) {
-        this.iduser = iduser;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getPasswd() {
@@ -60,11 +60,11 @@ public class UserDTO {
         this.email = email;
     }
 
-    public String getVaitro() {
-        return vaitro;
+    public String getRole() {
+        return role;
     }
 
-    public void setVaitro(String vaitro) {
-        this.vaitro = vaitro;
+    public void setRole(String role) {
+        this.role = role;
     }
 }

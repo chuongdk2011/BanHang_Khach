@@ -56,7 +56,8 @@
             android:exported="false" />
         <activity
             android:name=".activity.Chitietsanpham"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"/>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
