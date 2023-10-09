@@ -111,7 +111,7 @@ public class CartOrderAdapter extends BaseAdapter {
                     tvprice.setText(pricenew);
                     tvsoluong.setText(slmoi);
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference myRef = database.getReference("CartOrder/" + cartOrderDTO.getId_product());
+                    DatabaseReference myRef = database.getReference("CartOrder/" + cartOrderDTO.getIdCart());
                     Map<String, Object> mapcartoder = new HashMap<>();
                     mapcartoder.put("price", gianew);
                     mapcartoder.put("soluong", soluong);
@@ -134,7 +134,7 @@ public class CartOrderAdapter extends BaseAdapter {
                     tvprice.setText(pricenew);
                     tvsoluong.setText(slmoi);
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference myRef = database.getReference("CartOrder/" + cartOrderDTO.getId_product());
+                    DatabaseReference myRef = database.getReference("CartOrder/" + cartOrderDTO.getIdCart());
                     Map<String, Object> mapcartoder = new HashMap<>();
                     mapcartoder.put("price", gianew);
                     mapcartoder.put("soluong", soluong);
