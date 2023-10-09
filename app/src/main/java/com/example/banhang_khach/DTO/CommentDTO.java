@@ -2,18 +2,37 @@ package com.example.banhang_khach.DTO;
 
 public class CommentDTO {
     String idproduct;
-    String iduser;
+
     String content;
     String date;
+    String id;
+    UserDTO userDTO;
 
     public CommentDTO() {
     }
 
-    public CommentDTO(String idproduct, String iduser, String content, String date) {
+    public CommentDTO(String idproduct, String id, String content, String date, UserDTO userDTO) {
         this.idproduct = idproduct;
-        this.iduser = iduser;
+        this.id = id;
         this.content = content;
         this.date = date;
+        this.userDTO = userDTO;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public UserDTO getUserDTO() {
+        return userDTO;
+    }
+
+    public void setUserDTO(UserDTO userDTO) {
+        this.userDTO = userDTO;
     }
 
     public String getIdproduct() {
@@ -24,13 +43,6 @@ public class CommentDTO {
         this.idproduct = idproduct;
     }
 
-    public String getIduser() {
-        return iduser;
-    }
-
-    public void setIduser(String iduser) {
-        this.iduser = iduser;
-    }
 
     public String getContent() {
         return content;
