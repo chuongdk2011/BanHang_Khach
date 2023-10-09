@@ -5,10 +5,12 @@ public class DTO_QlySanPham {
     String image,name,price,information,category;
     int number;
 
+    boolean favorite;
+
     public DTO_QlySanPham() {
     }
 
-    public DTO_QlySanPham(String id, String image, String name, String price, String information, String category, int number) {
+    public DTO_QlySanPham(String id, String image, String name, String price, String information, String category, int number, boolean favorite) {
         this.id = id;
         this.image = image;
         this.name = name;
@@ -16,6 +18,7 @@ public class DTO_QlySanPham {
         this.information = information;
         this.category = category;
         this.number = number;
+        this.favorite = favorite;
     }
 
     public String getId() {
@@ -72,5 +75,13 @@ public class DTO_QlySanPham {
 
     public void setNumber(int number) {
         this.number = number;
+    }
+
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
     }
 }
