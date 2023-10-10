@@ -263,6 +263,7 @@
             android:layout_margin="5dp"
            />
         <LinearLayout
+            android:id="@+id/ll_muahang"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
