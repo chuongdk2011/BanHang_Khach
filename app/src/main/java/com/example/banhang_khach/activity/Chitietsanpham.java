@@ -55,7 +55,7 @@ import java.util.UUID;
 
 public class Chitietsanpham extends AppCompatActivity {
     String TAG = "chitietsp";
-    ImageView img_backsp, img_xemthem, img_pro, img_favo, img_bl;
+    ImageView img_backsp, img_xemthem, img_pro, img_favo, img_bl,img_chat;
     TextView tv_motasp, tv_xemthem, tv_price, tv_name, tv_dialogname, tv_dialogprice, tv_dialogsoluong;
     LinearLayout layout_xemthem, IMGaddCartOrder, llmuahang;
     ArrayList<DTO_QlySanPham> list;
@@ -179,6 +179,13 @@ public class Chitietsanpham extends AppCompatActivity {
                 showComment();
             }
         });
+        img_chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Chitietsanpham.this, ListCurChatActiivity.class));
+
+            }
+        });
     }
     private void getCheck() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
@@ -215,6 +222,7 @@ public class Chitietsanpham extends AppCompatActivity {
         img_favo = findViewById(R.id.img_favo_chi_tiet);
         img_bl = findViewById(R.id.img_bl);
         llmuahang = findViewById(R.id.ll_muahang);
+        img_chat = findViewById(R.id.img_chat);
     }
 
     private void showComment() {
