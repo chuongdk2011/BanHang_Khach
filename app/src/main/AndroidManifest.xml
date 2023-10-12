@@ -17,9 +17,15 @@
         android:theme="@style/Theme.BanHang_Khach"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-
-        <activity android:name=".activity.CartOrderActivity"
-            android:exported="true"/>
+        <activity
+            android:name=".activity.ListCurChatActiivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.CartOrderActivity"
+            android:exported="true" />
         <activity
             android:name=".Package_Bill.Activity.Chitietdonhang_Activity"
             android:exported="false" />
@@ -35,7 +41,6 @@
         <activity
             android:name=".Package_Bill.Activity.Xacnhandon_Activity"
             android:exported="false" />
-
         <activity
             android:name=".SplashActivity"
             android:exported="true">
@@ -57,7 +62,7 @@
         <activity
             android:name=".activity.Chitietsanpham"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
