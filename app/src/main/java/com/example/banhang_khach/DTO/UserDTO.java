@@ -7,6 +7,7 @@ public class UserDTO {
     int phone;
     String email;
     String role;
+    String lastMess;
 
     public UserDTO() {
     }
@@ -18,6 +19,14 @@ public class UserDTO {
         this.phone = phone;
         this.email = email;
         this.role = vaitro;
+    }
+
+    public String getLastMess() {
+        return lastMess;
+    }
+
+    public void setLastMess(String lastMess) {
+        this.lastMess = lastMess;
     }
 
     public String getId() {
