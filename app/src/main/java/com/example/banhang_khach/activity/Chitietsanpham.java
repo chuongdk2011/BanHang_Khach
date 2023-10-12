@@ -3,15 +3,20 @@ package com.example.banhang_khach.activity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -31,6 +36,7 @@ import com.example.banhang_khach.DTO.CommentDTO;
 import com.example.banhang_khach.DTO.DTO_QlySanPham;
 import com.example.banhang_khach.DTO.UserDTO;
 import com.example.banhang_khach.R;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -231,12 +237,14 @@ public class Chitietsanpham extends AppCompatActivity {
             }
         }
 
+
         ImageView img_close = view.findViewById(R.id.img_close);
         TextView tv_slcmt = view.findViewById(R.id.tv_slcmt);
         rcv_cmt = view.findViewById(R.id.rcv_comment);
         ed_cmt = view.findViewById(R.id.ed_cmt);
         ImageView img_send = view.findViewById(R.id.img_send);
         TextView tv_nullCMT = view.findViewById(R.id.tv_nullBL);
+
         adapterCMT = new CmtAdapter(listCMT, Chitietsanpham.this);
         rcv_cmt.setAdapter(adapterCMT);
         adapterCMT.notifyDataSetChanged();
@@ -482,4 +490,6 @@ public class Chitietsanpham extends AppCompatActivity {
         CartOrderDTO cartOrderDTO = new CartOrderDTO(idu, udi, idproduct, auth.getUid(), nameproduct, soluong, priceB, imageproduct);
         myRef.setValue(cartOrderDTO);
     }
+
+
 }
