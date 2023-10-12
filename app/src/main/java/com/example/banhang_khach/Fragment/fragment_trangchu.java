@@ -26,6 +26,9 @@ import com.example.banhang_khach.DTO.CategoryDTO;
 import com.example.banhang_khach.DTO.DTO_QlySanPham;
 import com.example.banhang_khach.R;
 import com.example.banhang_khach.activity.CartOrderActivity;
+import com.example.banhang_khach.activity.ChatActivity;
+import com.example.banhang_khach.activity.Chitietsanpham;
+import com.example.banhang_khach.activity.ListCurChatActiivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -49,7 +52,7 @@ public class fragment_trangchu extends Fragment {
     List<CategoryDTO> mlistCate;
     Spinner spn_locsp;
     SearchView sv_pro;
-    ImageView imgcart;
+    ImageView imgcart,img_chat;
     public static fragment_trangchu newInstance(){
         fragment_trangchu fragment = new fragment_trangchu();
 
@@ -64,6 +67,14 @@ public class fragment_trangchu extends Fragment {
         spn_locsp = viewok.findViewById(R.id.spn_locsp);
         sv_pro = viewok.findViewById(R.id.sv_pro);
         imgcart = viewok.findViewById(R.id.img_cart);
+        img_chat = viewok.findViewById(R.id.img_chat);
+
+        img_chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getContext(), ListCurChatActiivity.class));
+            }
+        });
         imgcart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
