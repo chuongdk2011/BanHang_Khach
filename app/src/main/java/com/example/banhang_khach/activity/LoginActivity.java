@@ -199,7 +199,6 @@ public class LoginActivity extends AppCompatActivity {
 
             } catch (Exception e) {
                 Log.e(TAG, "onActivityResult: " + e.getMessage());
-
             }
         }
 
