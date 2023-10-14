@@ -3,12 +3,12 @@ package com.example.banhang_khach.DTO;
 public class ChatDTO {
     String message;
     String senderid;
-    String timeStamp;
+    long timeStamp;
 
     public ChatDTO() {
     }
 
-    public ChatDTO(String message, String senderid, String timeStamp) {
+    public ChatDTO(String message, String senderid, long timeStamp) {
         this.message = message;
         this.senderid = senderid;
         this.timeStamp = timeStamp;
@@ -30,11 +30,11 @@ public class ChatDTO {
         this.senderid = senderid;
     }
 
-    public String getTimeStamp() {
+    public long getTimeStamp() {
         return timeStamp;
     }
 
-    public void setTimeStamp(String timeStamp) {
+    public void setTimeStamp(long timeStamp) {
         this.timeStamp = timeStamp;
     }
 }

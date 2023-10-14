@@ -71,7 +71,7 @@ public class ListCurChatActiivity extends AppCompatActivity {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 ChatDTO lastMessage = dataSnapshot.getValue(ChatDTO.class);
-
+                list.clear();
                 list.add(lastMessage);
                 adapter.notifyDataSetChanged();
                 if (list.size()==0){
@@ -81,10 +81,10 @@ public class ListCurChatActiivity extends AppCompatActivity {
                     tv_null.setVisibility(View.GONE);
                     rcv_listchat.setVisibility(View.VISIBLE);
                 }
-                // Xử lý tin nhắn ở đây...
+
             }
 
-            // Phần còn lại của các sự kiện...
+
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
 
