@@ -22,7 +22,7 @@
         android:layout_height="60dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="15dp"
-        android:src="@drawable/ic_person"
+        android:src="@drawable/user"
         app:civ_border_color="#FFFFFF"
         app:civ_border_width="1dp"
         app:layout_constraintLeft_toRightOf="@id/img_backChat"
@@ -54,7 +54,8 @@
             android:layout_height="match_parent"
             android:layout_margin="8dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:orientation="vertical"/>
+            android:orientation="vertical"
+            android:id="@+id/rcv_chat"/>
     </LinearLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -79,7 +80,7 @@
             android:id="@+id/cv_edChat">
 
             <EditText
-                android:id="@+id/textmsg"
+                android:id="@+id/ed_msg"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_marginLeft="@dimen/_10sdp"
