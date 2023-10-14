@@ -1,5 +1,6 @@
 package com.example.banhang_khach.activity;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,6 +37,8 @@ import com.example.banhang_khach.DTO.CommentDTO;
 import com.example.banhang_khach.DTO.DTO_QlySanPham;
 import com.example.banhang_khach.DTO.UserDTO;
 import com.example.banhang_khach.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
@@ -51,6 +54,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.UUID;
 
 public class Chitietsanpham extends AppCompatActivity {
@@ -70,6 +74,7 @@ public class Chitietsanpham extends AppCompatActivity {
     String idproduct, nameproduct, priceproduct, informationproduct, imageproduct, soluongkho;
 
     boolean isMyFavorite = false;
+    BottomSheetDialog bottomSheetDialog;
     EditText ed_cmt;
     UserDTO userDTO;
 
@@ -117,7 +122,21 @@ public class Chitietsanpham extends AppCompatActivity {
                         }
                     });
         }
-
+        img_favo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+                if (firebaseAuth.getCurrentUser() == null) {
+//            Toast.makeText(context, "You're not logged in", Toast.LENGTH_SHORT).show();
+                }else{
+                    if (isMyFavorite){
+                        removeFavorite(Chitietsanpham.this,idproduct);
+                    }else{
+                        addToFavorite(Chitietsanpham.this,idproduct);
+                    }
+                }
+            }
+        });
 
         Glide.with(Chitietsanpham.this).load(imageproduct).centerCrop().into(img_pro);
         tv_name.setText("Tên: " + nameproduct);
@@ -226,10 +245,11 @@ public class Chitietsanpham extends AppCompatActivity {
     }
 
     private void showComment() {
-        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(Chitietsanpham.this);
+        bottomSheetDialog = new BottomSheetDialog(Chitietsanpham.this);
 
         View view = getLayoutInflater().inflate(R.layout.dialog_comment, null);
         bottomSheetDialog.setContentView(view);
+        bottomSheetDialog.setCancelable(false);
 
 
         float screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
@@ -499,5 +519,65 @@ public class Chitietsanpham extends AppCompatActivity {
         myRef.setValue(cartOrderDTO);
     }
 
+    public void removeFavorite(Context context, String idProduct ){
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        if (firebaseAuth.getCurrentUser() == null){
+            Toast.makeText(context, "You're not logged in", Toast.LENGTH_SHORT).show();
+        }else{
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+            reference.child(firebaseAuth.getUid()).child("Favorites").child(idProduct)
+                    .removeValue()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Toast.makeText(context, "Removed to your favorites list...", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(context, "failed to remove to favorite due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+    }
 
+    public void addToFavorite(Context context,String idProduct){
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        if (firebaseAuth.getCurrentUser() == null){
+            Toast.makeText(context, "You're not logged in", Toast.LENGTH_SHORT).show();
+        }else{
+            long timestamp = System.currentTimeMillis();
+
+            HashMap<String , Object> hashMap = new HashMap<>();
+            hashMap.put("idProduct",idProduct);
+            hashMap.put("timeStamp",timestamp);
+
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+            reference.child(firebaseAuth.getUid()).child("Favorites").child(idProduct)
+                    .setValue(hashMap)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Toast.makeText(context, "Added to your favorites list...", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(context, "failed to add to favorite due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (bottomSheetDialog.isShowing()==true){
+            bottomSheetDialog.setCancelable(true);
+           super.onBackPressed();
+        }else{
+            super.onBackPressed();
+        }
+    }
 }

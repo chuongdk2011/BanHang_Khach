@@ -76,6 +76,7 @@ public class ProAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                     .addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            Log.e(TAG, "My: " + snapshot.exists());
                             isMyFavorite = snapshot.exists();
                             if (isMyFavorite){
                                 viewHolder.img_fave.setImageResource(R.drawable.favorite_24);
@@ -92,22 +93,22 @@ public class ProAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                     });
 //        }
 
-        viewHolder.img_fave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-                if (firebaseAuth.getCurrentUser() == null){
-                    Toast.makeText(context, "You're not logged in", Toast.LENGTH_SHORT).show();
-                }else{
-                    if (isMyFavorite){
-                        removeFavorite(context,sanPham.getId());
-                    }else {
-                        addToFavorite(context,sanPham.getId());
-                    }
-                }
-            }
-        });
+//        viewHolder.img_fave.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+//                if (firebaseAuth.getCurrentUser() == null){
+//                    Toast.makeText(context, "You're not logged in", Toast.LENGTH_SHORT).show();
+//                }else{
+//                    if (isMyFavorite){
+//                        removeFavorite(context,sanPham.getId());
+//                    }else {
+//                        addToFavorite(context,sanPham.getId());
+//                    }
+//                }
+//            }
+//        });
         viewHolder.ll_chitietsp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
