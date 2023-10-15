@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#4253B1"
-    tools:context=".activity.ChatActivity">
+    android:background="#000000"
+    >
 
     <ImageView
         android:id="@+id/img_backChat"
@@ -41,22 +41,30 @@
         app:layout_constraintLeft_toRightOf="@id/profile_image"
         app:layout_constraintTop_toTopOf="@id/profile_image" />
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@drawable/bg_chat"
         app:layout_constraintTop_toBottomOf="@id/profile_image"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@drawable/bg_chat"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="30dp">
 
-        <androidx.recyclerview.widget.RecyclerView
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="8dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:orientation="vertical"
-            android:id="@+id/rcv_chat"/>
-    </LinearLayout>
+            android:background="@drawable/chatback3"
+            >
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="vertical"
+                android:id="@+id/rcv_chat"/>
+        </LinearLayout>
+    </FrameLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
