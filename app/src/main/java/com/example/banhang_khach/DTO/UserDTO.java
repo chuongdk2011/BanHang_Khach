@@ -8,25 +8,22 @@ public class UserDTO {
     String email;
     String role;
     String lastMess;
+    String age;
+    String adress;
 
     public UserDTO() {
     }
 
-    public UserDTO(String iduser, String passwd, String fullname, int phone, String email, String vaitro) {
-        this.id = iduser;
+    public UserDTO(String id, String passwd, String fullname, int phone, String email, String role, String lastMess, String age, String adress) {
+        this.id = id;
         this.passwd = passwd;
         this.fullname = fullname;
         this.phone = phone;
         this.email = email;
-        this.role = vaitro;
-    }
-
-    public String getLastMess() {
-        return lastMess;
-    }
-
-    public void setLastMess(String lastMess) {
+        this.role = role;
         this.lastMess = lastMess;
+        this.age = age;
+        this.adress = adress;
     }
 
     public String getId() {
@@ -75,5 +72,29 @@ public class UserDTO {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getLastMess() {
+        return lastMess;
+    }
+
+    public void setLastMess(String lastMess) {
+        this.lastMess = lastMess;
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    public String getAdress() {
+        return adress;
+    }
+
+    public void setAdress(String adress) {
+        this.adress = adress;
     }
 }

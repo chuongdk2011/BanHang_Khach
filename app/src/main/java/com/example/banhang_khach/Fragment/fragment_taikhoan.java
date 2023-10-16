@@ -18,6 +18,7 @@ import com.example.banhang_khach.Package_Bill.Activity.Hoanthanhdon_Activity;
 import com.example.banhang_khach.Package_Bill.Activity.Layhang_Activity;
 import com.example.banhang_khach.Package_Bill.Activity.Xacnhandon_Activity;
 import com.example.banhang_khach.R;
+import com.example.banhang_khach.activity.InformationActivity;
 import com.example.banhang_khach.activity.LoginActivity;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -28,7 +29,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class fragment_taikhoan extends Fragment {
     String TAG = "fragmenttaikhoan";
-    TextView tv_fullname;
+    TextView tv_fullname,information_id;
     private FirebaseAuth auth;
     RelativeLayout rlxacnhandon, rllayhang, rldanggiao, rlhoanthanh;
 
@@ -48,6 +49,7 @@ public class fragment_taikhoan extends Fragment {
         rlxacnhandon = viewok.findViewById(R.id.rl_xacnhandon);
         rllayhang = viewok.findViewById(R.id.rl_layhang);
         rldanggiao = viewok.findViewById(R.id.rl_danggiao);
+        information_id = viewok.findViewById(R.id.information_id);
         rlhoanthanh = viewok.findViewById(R.id.rl_hoanthanh);
         rlxacnhandon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,6 +79,13 @@ public class fragment_taikhoan extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), Hoanthanhdon_Activity.class);
                 intent.putExtra("status", 4);
+                startActivity(intent);
+            }
+        });
+        information_id.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), InformationActivity.class);
                 startActivity(intent);
             }
         });
