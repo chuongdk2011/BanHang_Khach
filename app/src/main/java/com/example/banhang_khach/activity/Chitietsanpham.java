@@ -60,7 +60,7 @@ import java.util.UUID;
 public class Chitietsanpham extends AppCompatActivity {
     String TAG = "chitietsp";
     ImageView img_backsp, img_xemthem, img_pro, img_favo, img_bl,img_chat;
-    TextView tv_motasp, tv_xemthem, tv_price, tv_name, tv_dialogname, tv_dialogprice, tv_dialogsoluong;
+    TextView tv_motasp, tv_xemthem, tv_price, tv_name;
     LinearLayout layout_xemthem, IMGaddCartOrder, llmuahang;
     ArrayList<DTO_QlySanPham> list;
     ProAdapter adapter;
@@ -91,7 +91,7 @@ public class Chitietsanpham extends AppCompatActivity {
         priceproduct = intent.getStringExtra("price");
         informationproduct = intent.getStringExtra("information");
         imageproduct = intent.getStringExtra("image");
-        soluongkho = intent.getStringExtra("soluongkho");
+//        soluongkho = intent.getStringExtra("soluongkho");
 
         listCMT = new ArrayList<>();
 
@@ -189,7 +189,13 @@ public class Chitietsanpham extends AppCompatActivity {
         llmuahang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                BtnMuaHang();
+                Intent intent1 = new Intent(Chitietsanpham.this, BuyNow_Activity.class);
+                intent1.putExtra("id_product", idproduct);
+                intent1.putExtra("name", nameproduct);
+                intent1.putExtra("price", priceproduct);
+                intent1.putExtra("image", imageproduct);
+                intent1.putExtra("information", informationproduct);
+                startActivity(intent1);
             }
         });
         img_bl.setOnClickListener(new View.OnClickListener() {
@@ -202,6 +208,7 @@ public class Chitietsanpham extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(Chitietsanpham.this, ChatActivity.class));
+
             }
         });
     }
@@ -393,69 +400,7 @@ public class Chitietsanpham extends AppCompatActivity {
             }
         });
     }
-
-    public void BtnMuaHang() {
-        final Dialog dialog1 = new Dialog(Chitietsanpham.this);
-        dialog1.setContentView(R.layout.dialog_addcartorder);
-        dialog1.setCancelable(false);
-
-        Window window = dialog1.getWindow();
-        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        if (dialog1 != null && dialog1.getWindow() != null) {
-            dialog1.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-        }
-
-        ImageView btn_close, imgpro, imgtru, imgcong;
-        btn_close = dialog1.findViewById(R.id.btn_close);
-        Button btn_addcart = dialog1.findViewById(R.id.btn_addcart);
-        tv_dialogsoluong = dialog1.findViewById(R.id.tv_soluong);
-        imgpro = dialog1.findViewById(R.id.img_pro);
-        tv_dialogname = dialog1.findViewById(R.id.tv_name);
-        tv_dialogprice = dialog1.findViewById(R.id.tv_price);
-        imgtru = dialog1.findViewById(R.id.imgtru);
-        imgcong = dialog1.findViewById(R.id.imgcong);
-
-        Glide.with(Chitietsanpham.this).load(imageproduct).centerCrop().into(imgpro);
-        tv_dialogname.setText("Tên: " + nameproduct);
-        tv_dialogprice.setText("Giá: " + priceproduct + "đ");
-        soluong = Integer.parseInt(tv_dialogsoluong.getText().toString().trim());
-        imgcong.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int soluong = Integer.parseInt(tv_dialogsoluong.getText().toString().trim()) + 1;
-                if (soluong < 101) {
-                    String slmoi = String.valueOf(soluong);
-                    tv_dialogsoluong.setText(slmoi);
-                }
-            }
-        });
-        imgtru.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int soluong = Integer.parseInt(tv_dialogsoluong.getText().toString().trim()) - 1;
-                if (soluong > 0) {
-                    String slmoi = String.valueOf(soluong);
-                    tv_dialogsoluong.setText(slmoi);
-                }
-            }
-        });
-        btn_addcart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MuaHang();
-                dialog1.dismiss();
-            }
-        });
-        btn_close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog1.dismiss();
-            }
-        });
-        dialog1.show();
-    }
-
-    private void AddCart() {
+    public void AddCart() {
         Double gia = Double.parseDouble(priceproduct);
         UUID uuid = UUID.randomUUID();
         String idu = uuid.toString().trim();
@@ -493,31 +438,6 @@ public class Chitietsanpham extends AppCompatActivity {
             }
         });
     }
-    public void MuaHang(){
-        int soluong = Integer.parseInt(tv_dialogsoluong.getText().toString().trim());
-        double priceB = Double.parseDouble(priceproduct) * soluong;
-        UUID uuid = UUID.randomUUID();
-        String udi = uuid.toString().trim();
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
-        String date = df.format(Calendar.getInstance().getTime());
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef_Bill = database.getReference("BillProduct/" + udi);
-        BillDTO billDTO = new BillDTO(udi, auth.getUid(), priceB,date, 1);
-        myRef_Bill.setValue(billDTO, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                Toast.makeText(Chitietsanpham.this, "Cảm ơn bạn đã đặt hàng", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        UUID uuid1 = UUID.randomUUID();
-        String idu = uuid1.toString().trim();
-        DatabaseReference myRef = database.getReference("CartOrder/" + idu);
-        CartOrderDTO cartOrderDTO = new CartOrderDTO(idu, udi, idproduct, auth.getUid(), nameproduct, soluong, priceB, imageproduct);
-        myRef.setValue(cartOrderDTO);
-    }
-
     public void removeFavorite(Context context, String idProduct ){
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         if (firebaseAuth.getCurrentUser() == null){

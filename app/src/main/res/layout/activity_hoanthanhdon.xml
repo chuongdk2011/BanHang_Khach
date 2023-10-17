@@ -19,7 +19,7 @@
         <TextView
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="Đơn hàng đang chờ xác nhận"
+            android:text="Đơn hàng hoàn thành"
             android:textSize="20dp"
             android:textColor="@color/white"
             android:gravity="center"

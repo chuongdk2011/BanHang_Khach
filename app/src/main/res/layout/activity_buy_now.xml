@@ -69,14 +69,69 @@
         android:layout_below="@+id/tv_price"
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@id/tv_soluong"
-        android:layout_marginLeft="10dp"/>
+        android:layout_marginLeft="5dp"/>
+
+    <TextView
+        android:id="@+id/tv_chon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Chọn phương thức thanh toán"
+        android:layout_below="@id/img_pro"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="5dp"
+        android:textStyle="bold"/>
+
+    <RadioGroup
+        android:id="@+id/rdogroup_thanhtoan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/tv_chon"
+        android:layout_margin="10dp">
+        <RadioButton android:id="@+id/radio_pirates"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thanh toán khi nhận hàng"/>
+        <RadioButton android:id="@+id/radio_ninjas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thanh toán chuyển khoản"/>
+    </RadioGroup>
 
     <Button
         android:id="@+id/btn_addcart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Thêm vào Giỏ hàng"
-        android:layout_below="@id/img_pro"/>
+        android:text="Mua hàng"
+        android:layout_below="@id/rdogroup_thanhtoan"/>
 
+    <TextView
+        android:id="@+id/msg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="400dp"/>
+
+    <TextView
+        android:id="@+id/txtToken"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="400dp"
+        android:layout_marginLeft="40dp"
+        android:textColor="#4CAF50"
+        android:text="ok"
+        />
+
+    <Button
+        android:id="@+id/btnthanhtoanpay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Mua hàng zalopay ( ấn nút này trươc )"
+        android:layout_marginTop="450dp"/>
+    <Button
+        android:id="@+id/btntesst"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Mua hàng zalopay ( xong đến nút này )"
+        android:layout_marginTop="500dp"/>
 
 </RelativeLayout>
