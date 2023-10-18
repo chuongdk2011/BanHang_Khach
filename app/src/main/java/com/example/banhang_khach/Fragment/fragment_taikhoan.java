@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.example.banhang_khach.Package_Bill.Activity.Giaohang_Activity;
@@ -29,7 +30,8 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class fragment_taikhoan extends Fragment {
     String TAG = "fragmenttaikhoan";
-    TextView tv_fullname,information_id;
+    TextView tv_fullname;
+    CardView information_id;
     private FirebaseAuth auth;
     RelativeLayout rlxacnhandon, rllayhang, rldanggiao, rlhoanthanh;
 
@@ -49,7 +51,7 @@ public class fragment_taikhoan extends Fragment {
         rlxacnhandon = viewok.findViewById(R.id.rl_xacnhandon);
         rllayhang = viewok.findViewById(R.id.rl_layhang);
         rldanggiao = viewok.findViewById(R.id.rl_danggiao);
-        information_id = viewok.findViewById(R.id.information_id);
+        information_id = viewok.findViewById(R.id.card2_infomation);
         rlhoanthanh = viewok.findViewById(R.id.rl_hoanthanh);
         rlxacnhandon.setOnClickListener(new View.OnClickListener() {
             @Override

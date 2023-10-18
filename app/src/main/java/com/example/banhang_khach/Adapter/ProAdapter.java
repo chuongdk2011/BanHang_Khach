@@ -115,12 +115,6 @@ public class ProAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 Context context1 = view.getContext();
                 Intent intent = new Intent(context1, Chitietsanpham.class);
                 intent.putExtra("id_product", sanPham.getId());
-                Log.d(TAG, "idproduct: " + sanPham.getId());
-                intent.putExtra("name", sanPham.getName());
-                intent.putExtra("price", sanPham.getPrice());
-                intent.putExtra("image", sanPham.getImage());
-                intent.putExtra("information", sanPham.getInformation());
-                intent.putExtra("soluongkho", sanPham.getNumber());
                 context1.startActivity(intent);
             }
         });

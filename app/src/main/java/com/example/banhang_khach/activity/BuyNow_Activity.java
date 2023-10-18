@@ -22,25 +22,23 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.banhang_khach.DTO.BillDTO;
 import com.example.banhang_khach.DTO.CartOrderDTO;
+import com.example.banhang_khach.DTO.DTO_QlySanPham;
 import com.example.banhang_khach.R;
 import com.example.banhang_khach.Zalopay.Api.CreateOrder;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
-
-import vn.momo.momo_partner.AppMoMoLib;
-import vn.momo.momo_partner.MoMoParameterNameMap;
 import vn.zalopay.sdk.Environment;
 import vn.zalopay.sdk.ZaloPayError;
 import vn.zalopay.sdk.ZaloPaySDK;
@@ -48,9 +46,8 @@ import vn.zalopay.sdk.listeners.PayOrderListener;
 
 public class BuyNow_Activity extends AppCompatActivity {
     String TAG  = "buynow";
-    Button btntesst;
-    TextView tv_dialogname, tv_dialogprice, tv_dialogsoluong, tvMessage, txtToken;
-    Button btnCreateOrder, btnPay;
+    TextView tv_dialogname, tv_dialogprice, tv_dialogsoluong;
+    Button btnPay;
     int soluong;
     String idproduct, nameproduct, priceproduct, informationproduct, imageproduct;
 
@@ -62,23 +59,37 @@ public class BuyNow_Activity extends AppCompatActivity {
 
         Intent intent = getIntent();
         idproduct = intent.getStringExtra("id_product");
-        nameproduct = intent.getStringExtra("name");
-        priceproduct = intent.getStringExtra("price");
-        informationproduct = intent.getStringExtra("information");
-        imageproduct = intent.getStringExtra("image");
+        getchitietsanpham();
         Muahang();
-        btnzalopay();
+        ThanhtoanZaloPay();
     }
     public void Anhxa(){
-        tvMessage = findViewById(R.id.msg);
         btnPay = findViewById(R.id.btntesst);
-        btnCreateOrder = findViewById(R.id.btnthanhtoanpay);
-        txtToken = findViewById(R.id.txtToken);
     }
+    public void getchitietsanpham(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        Log.d(TAG, "getchitietsanpham: " + idproduct);
 
-    private void IsDone() {
-        txtToken.setVisibility(View.VISIBLE);
-        btnPay.setVisibility(View.VISIBLE);
+        Query query = reference.child("Products").orderByChild("id").equalTo(idproduct);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                        DTO_QlySanPham dto_qlySanPham = issue.getValue(DTO_QlySanPham.class);
+                        idproduct = dto_qlySanPham.getId();
+                        priceproduct = dto_qlySanPham.getPrice();
+                        nameproduct = dto_qlySanPham.getName();
+                        imageproduct = dto_qlySanPham.getImage();
+                        informationproduct = dto_qlySanPham.getInformation();
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
     public void Muahang(){
         ImageView btn_close, imgpro, imgtru, imgcong;
@@ -115,6 +126,7 @@ public class BuyNow_Activity extends AppCompatActivity {
                 }
             }
         });
+
         btn_addcart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -128,7 +140,6 @@ public class BuyNow_Activity extends AppCompatActivity {
             }
         });
     }
-
     public void btnmuahang(){
         int soluong = Integer.parseInt(tv_dialogsoluong.getText().toString().trim());
         double priceB = Double.parseDouble(priceproduct) * soluong;
@@ -153,44 +164,29 @@ public class BuyNow_Activity extends AppCompatActivity {
         CartOrderDTO cartOrderDTO = new CartOrderDTO(idu, udi, idproduct, auth.getUid(), nameproduct, soluong, priceB, imageproduct);
         myRef.setValue(cartOrderDTO);
     }
-
-    public void btnzalopay(){
+    public void ThanhtoanZaloPay(){
         StrictMode.ThreadPolicy policy = new
                 StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
         // ZaloPay SDK Init
         ZaloPaySDK.init(2553, Environment.SANDBOX);
-        // handle CreateOrder
-        btnCreateOrder.setOnClickListener(new View.OnClickListener() {
+        btnPay.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
-                CreateOrder orderApi = new CreateOrder();
                 String amou = priceproduct.toString().trim();
+                CreateOrder orderApi = new CreateOrder();
+                JSONObject data ;
+                String token ;
                 try {
-                    JSONObject data = orderApi.createOrder(amou);
-                    Log.d(TAG, "price: " + data);
-                    String code = data.getString("return_code");
-                    Toast.makeText(getApplicationContext(), "return_code: " + code, Toast.LENGTH_LONG).show();
-
-                    if (code.equals("1")) {
-                        Log.d(TAG, "txttoken: " + (data.getString("zp_trans_token")));
-                        txtToken.setText(data.getString("zp_trans_token"));
-                        IsDone();
-                    }
-
+                    data = orderApi.createOrder(amou);
+                    token = data.getString("zp_trans_token");
+                    Log.d(TAG, "token: " + token);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
-            }
-        });
-
-        btnPay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String token = txtToken.getText().toString();
                 ZaloPaySDK.getInstance().payOrder(BuyNow_Activity.this, token, "demozpdk://app", new PayOrderListener() {
                     @Override
                     public void onPaymentSucceeded(final String transactionId, final String transToken, final String appTransID) {
@@ -240,7 +236,6 @@ public class BuyNow_Activity extends AppCompatActivity {
             }
         });
     }
-
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         ZaloPaySDK.getInstance().onResult(intent);

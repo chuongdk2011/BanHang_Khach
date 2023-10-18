@@ -69,9 +69,8 @@ public class Chitietsanpham extends AppCompatActivity {
     CmtAdapter adapterCMT;
     RecyclerView rcv_cmt;
     int slbl;
-    int soluong;
     int checkaddnull = 0;
-    String idproduct, nameproduct, priceproduct, informationproduct, imageproduct, soluongkho;
+    String idproduct, nameproduct, priceproduct, informationproduct, imageproduct;
 
     boolean isMyFavorite = false;
     BottomSheetDialog bottomSheetDialog;
@@ -87,11 +86,7 @@ public class Chitietsanpham extends AppCompatActivity {
 
         Intent intent = getIntent();
         idproduct = intent.getStringExtra("id_product");
-        nameproduct = intent.getStringExtra("name");
-        priceproduct = intent.getStringExtra("price");
-        informationproduct = intent.getStringExtra("information");
-        imageproduct = intent.getStringExtra("image");
-//        soluongkho = intent.getStringExtra("soluongkho");
+        getchitietsanpham();
 
         listCMT = new ArrayList<>();
 
@@ -191,10 +186,6 @@ public class Chitietsanpham extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent1 = new Intent(Chitietsanpham.this, BuyNow_Activity.class);
                 intent1.putExtra("id_product", idproduct);
-                intent1.putExtra("name", nameproduct);
-                intent1.putExtra("price", priceproduct);
-                intent1.putExtra("image", imageproduct);
-                intent1.putExtra("information", informationproduct);
                 startActivity(intent1);
             }
         });
@@ -208,6 +199,33 @@ public class Chitietsanpham extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(Chitietsanpham.this, ChatActivity.class));
+
+            }
+        });
+    }
+
+    public void getchitietsanpham(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        Log.d(TAG, "getchitietsanpham: " + idproduct);
+
+        Query query = reference.child("Products").orderByChild("id").equalTo(idproduct);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                        DTO_QlySanPham dto_qlySanPham = issue.getValue(DTO_QlySanPham.class);
+                        idproduct = dto_qlySanPham.getId();
+                        priceproduct = dto_qlySanPham.getPrice();
+                        nameproduct = dto_qlySanPham.getName();
+                        imageproduct = dto_qlySanPham.getImage();
+                        informationproduct = dto_qlySanPham.getInformation();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
