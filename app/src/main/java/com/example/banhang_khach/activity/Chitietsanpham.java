@@ -133,10 +133,7 @@ public class Chitietsanpham extends AppCompatActivity {
             }
         });
 
-        Glide.with(Chitietsanpham.this).load(imageproduct).centerCrop().into(img_pro);
-        tv_name.setText("Tên: " + nameproduct);
-        tv_price.setText("Giá: " + priceproduct + "đ");
-        tv_motasp.setText(informationproduct);
+
 
         final int[] count = {0};
         layout_xemthem.setOnClickListener(new View.OnClickListener() {
@@ -220,6 +217,10 @@ public class Chitietsanpham extends AppCompatActivity {
                         nameproduct = dto_qlySanPham.getName();
                         imageproduct = dto_qlySanPham.getImage();
                         informationproduct = dto_qlySanPham.getInformation();
+                        Glide.with(Chitietsanpham.this).load(imageproduct).centerCrop().into(img_pro);
+                        tv_name.setText("Tên: " + nameproduct);
+                        tv_price.setText("Giá: " + priceproduct + "đ");
+                        tv_motasp.setText(informationproduct);
                     }
                 }
             }
@@ -232,6 +233,7 @@ public class Chitietsanpham extends AppCompatActivity {
     }
     private void getCheck() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
 
         Query query = reference.child("CartOrder").orderByChild("id_product").equalTo(idproduct);
         query.addValueEventListener(new ValueEventListener() {
@@ -240,7 +242,12 @@ public class Chitietsanpham extends AppCompatActivity {
                 if (snapshot.exists()) {
                     for (DataSnapshot issue : snapshot.getChildren()) {
                         CartOrderDTO cartOrderDTO = issue.getValue(CartOrderDTO.class);
-                        if(cartOrderDTO.getIdBill().equalsIgnoreCase("") == true){
+                        Log.d(TAG, "checkbill: " + (cartOrderDTO.getIdBill().equalsIgnoreCase("") == true) );
+                        Log.d(TAG, "checkuser: " + (auth.getUid().equals(cartOrderDTO.getIduser())) );
+                        Log.d(TAG, "checkuser + bill: " + (cartOrderDTO.getIdBill().equalsIgnoreCase("") == true
+                                && auth.getUid().equals(cartOrderDTO.getIduser())) );
+                        if(cartOrderDTO.getIdBill().equalsIgnoreCase("") == true
+                                && auth.getUid().equals(cartOrderDTO.getIduser())){
                             Log.d(TAG, "onDataChange: " + (cartOrderDTO.getIdBill().equalsIgnoreCase("") == true));
                             checkaddnull = 1;
                         }

@@ -47,7 +47,8 @@ import vn.zalopay.sdk.listeners.PayOrderListener;
 public class BuyNow_Activity extends AppCompatActivity {
     String TAG  = "buynow";
     TextView tv_dialogname, tv_dialogprice, tv_dialogsoluong;
-    Button btnPay;
+    ImageView btn_close, imgpro, imgtru, imgcong;
+    Button btnPay, btn_addcart;
     int soluong;
     String idproduct, nameproduct, priceproduct, informationproduct, imageproduct;
 
@@ -65,6 +66,14 @@ public class BuyNow_Activity extends AppCompatActivity {
     }
     public void Anhxa(){
         btnPay = findViewById(R.id.btntesst);
+        btn_close = findViewById(R.id.btn_close);
+        btn_addcart = findViewById(R.id.btn_addcart);
+        tv_dialogsoluong = findViewById(R.id.tv_soluong);
+        imgpro = findViewById(R.id.img_pro);
+        tv_dialogname = findViewById(R.id.tv_name);
+        tv_dialogprice = findViewById(R.id.tv_price);
+        imgtru = findViewById(R.id.imgtru);
+        imgcong = findViewById(R.id.imgcong);
     }
     public void getchitietsanpham(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
@@ -82,6 +91,9 @@ public class BuyNow_Activity extends AppCompatActivity {
                         nameproduct = dto_qlySanPham.getName();
                         imageproduct = dto_qlySanPham.getImage();
                         informationproduct = dto_qlySanPham.getInformation();
+                        Glide.with(BuyNow_Activity.this).load(imageproduct).centerCrop().into(imgpro);
+                        tv_dialogname.setText("Tên: " + nameproduct);
+                        tv_dialogprice.setText("Giá: " + priceproduct + "đ");
                     }
                 }
             }
@@ -92,19 +104,6 @@ public class BuyNow_Activity extends AppCompatActivity {
         });
     }
     public void Muahang(){
-        ImageView btn_close, imgpro, imgtru, imgcong;
-        btn_close = findViewById(R.id.btn_close);
-        Button btn_addcart = findViewById(R.id.btn_addcart);
-        tv_dialogsoluong = findViewById(R.id.tv_soluong);
-        imgpro =findViewById(R.id.img_pro);
-        tv_dialogname = findViewById(R.id.tv_name);
-        tv_dialogprice = findViewById(R.id.tv_price);
-        imgtru = findViewById(R.id.imgtru);
-        imgcong = findViewById(R.id.imgcong);
-
-        Glide.with(BuyNow_Activity.this).load(imageproduct).centerCrop().into(imgpro);
-        tv_dialogname.setText("Tên: " + nameproduct);
-        tv_dialogprice.setText("Giá: " + priceproduct + "đ");
         soluong = Integer.parseInt(tv_dialogsoluong.getText().toString().trim());
         imgcong.setOnClickListener(new View.OnClickListener() {
             @Override
