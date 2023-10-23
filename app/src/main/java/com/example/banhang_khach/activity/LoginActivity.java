@@ -40,6 +40,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.HashMap;
 
@@ -224,6 +225,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             database.getReference().child("Users").child(user.getUid()).setValue(map);
                             Toast.makeText(LoginActivity.this, "Login Email Success.", Toast.LENGTH_SHORT).show();
+                            saveUserFCMToken();
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finishAffinity();
                         }else{
@@ -260,6 +262,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             database.getReference().child("Users").child(user.getUid()).setValue(map);
                             Toast.makeText(LoginActivity.this, "Login Email Success.", Toast.LENGTH_SHORT).show();
+                            saveUserFCMToken();
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finishAffinity();
 
@@ -318,6 +321,7 @@ public class LoginActivity extends AppCompatActivity {
 //                            Log.e(TAG, "onComplete: " + user.getEmail());
                             Log.e(TAG, "onComplete: " + user.getUid());
                             FirebaseDatabase database = FirebaseDatabase.getInstance();
+                            saveUserFCMToken();
 
                             DatabaseReference myRefId = database.getReference("Users/" + user.getUid() + "/id");
                             myRefId.setValue(user.getUid());
@@ -348,6 +352,25 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
+                    }
+                });
+    }
+
+    private void saveUserFCMToken() {
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+                        // Lấy token
+                        String token = task.getResult();
+                        // Lưu token vào database liên kết với UID của người dùng
+                        String userUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                        DatabaseReference tokenRef = FirebaseDatabase.getInstance().getReference("userTokens").child(userUID);
+                        tokenRef.setValue(token);
                     }
                 });
     }
