@@ -59,7 +59,7 @@ import java.util.UUID;
 
 public class Chitietsanpham extends AppCompatActivity {
     String TAG = "chitietsp";
-    ImageView img_backsp, img_xemthem, img_pro, img_favo, img_bl,img_chat;
+    ImageView img_backsp, img_xemthem, img_pro, img_favo, img_bl,img_chat,img_bot;
     TextView tv_motasp, tv_xemthem, tv_price, tv_name;
     LinearLayout layout_xemthem, IMGaddCartOrder, llmuahang;
     ArrayList<DTO_QlySanPham> list;
@@ -258,6 +258,12 @@ public class Chitietsanpham extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
+        img_bot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Chitietsanpham.this, ChatBotActivity.class));
+            }
+        });
     }
 
     public void Anhxa() {
@@ -273,6 +279,7 @@ public class Chitietsanpham extends AppCompatActivity {
         img_bl = findViewById(R.id.img_bl);
         llmuahang = findViewById(R.id.ll_muahang);
         img_chat = findViewById(R.id.img_chat);
+        img_bot = findViewById(R.id.img_bot);
     }
 
     private void showComment() {
@@ -514,14 +521,14 @@ public class Chitietsanpham extends AppCompatActivity {
                     });
         }
     }
-
-    @Override
-    public void onBackPressed() {
-        if (bottomSheetDialog.isShowing()==true){
-            bottomSheetDialog.setCancelable(true);
-           super.onBackPressed();
-        }else{
-            super.onBackPressed();
-        }
-    }
+//
+//    @Override
+//    public void onBackPressed() {
+//        if (bottomSheetDialog.isShowing()==true){
+//            bottomSheetDialog.setCancelable(true);
+//           super.onBackPressed();
+//        }else{
+//            super.onBackPressed();
+//        }
+//    }
 }

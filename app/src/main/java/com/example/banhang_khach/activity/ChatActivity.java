@@ -3,6 +3,8 @@ package com.example.banhang_khach.activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import com.example.banhang_khach.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,7 +42,8 @@ public class ChatActivity extends AppCompatActivity {
     ArrayList<ChatDTO> list;
     ChatAdapter adapter;
     RecyclerView rcv_chat;
-
+    private ChildEventListener chatEventListener;
+    DatabaseReference chatreference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,25 +83,67 @@ public class ChatActivity extends AppCompatActivity {
         rcv_chat = findViewById(R.id.rcv_chat);
     }
     private void getListChat() {
-        DatabaseReference chatreference = database.getReference().child("chats").child(senderRoom).child("messages");
-        chatreference.addValueEventListener(new ValueEventListener() {
+        chatreference = database.getReference().child("chats").child(senderRoom).child("messages");
+
+
+        chatEventListener = new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                list.clear();
-                for (DataSnapshot dataSnapshot:snapshot.getChildren()){
-                    ChatDTO messages = dataSnapshot.getValue(ChatDTO.class);
-                    list.add(messages);
-                }
-                Log.d("chuongdk", "onDataChange: "+list.size());
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, String s) {
+                ChatDTO newMessage = dataSnapshot.getValue(ChatDTO.class);
+                list.add(newMessage);
+                adapter.notifyDataSetChanged();
+
+                // Gửi thông báo cho người nhận
+                sendNotification(newMessage);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, String s) {
                 adapter.notifyDataSetChanged();
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                ChatDTO deletedMessage = dataSnapshot.getValue(ChatDTO.class);
+                if (deletedMessage != null) {
+                    for (int i = 0; i < list.size(); i++) {
+                        if (list.get(i).getId().equals(deletedMessage.getId())) {
+                            list.remove(i);
+                            adapter.notifyItemRemoved(i);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, String s) {
+                adapter.notifyDataSetChanged();
 
             }
-        });
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.w("ChatActivity", "Failed to read chats.", databaseError.toException());
+            }
+        };
+
+        // Đặt ChildEventListener vào tham chiếu database
+        chatreference.addChildEventListener(chatEventListener);
     }
+
+    private void sendNotification(ChatDTO newMessage) {
+
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (chatreference != null && chatEventListener != null) {
+            chatreference.removeEventListener(chatEventListener);
+        }
+    }
+
 
     private void addMessage() {
         String message = ed_chat.getText().toString();
@@ -107,19 +153,23 @@ public class ChatActivity extends AppCompatActivity {
         }
         ed_chat.setText("");
         Date date = new Date();
-        ChatDTO messagess = new ChatDTO(message,SenderUID,date.getTime());
+
+
+
 
         database= FirebaseDatabase.getInstance();
-        database.getReference().child("chats")
+        DatabaseReference databaseReference = database.getReference().child("chats")
                 .child(senderRoom)
-                .child("messages")
-                .push().setValue(messagess).addOnCompleteListener(new OnCompleteListener<Void>() {
+                .child("messages");
+        String id = databaseReference.push().getKey();
+        ChatDTO messagess = new ChatDTO(id,message,SenderUID,date.getTime());
+               databaseReference.child(id).setValue(messagess).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         database.getReference().child("chats")
                                 .child(reciverRoom)
                                 .child("messages")
-                                .push().setValue(messagess).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                .child(id).setValue(messagess).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
 

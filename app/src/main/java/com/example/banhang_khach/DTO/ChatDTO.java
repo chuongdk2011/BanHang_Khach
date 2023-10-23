@@ -1,6 +1,7 @@
 package com.example.banhang_khach.DTO;
 
 public class ChatDTO {
+    String id;
     String message;
     String senderid;
     long timeStamp;
@@ -8,10 +9,19 @@ public class ChatDTO {
     public ChatDTO() {
     }
 
-    public ChatDTO(String message, String senderid, long timeStamp) {
+    public ChatDTO(String id,String message, String senderid, long timeStamp) {
+        this.id = id;
         this.message = message;
         this.senderid = senderid;
         this.timeStamp = timeStamp;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getMessage() {
