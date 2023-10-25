@@ -67,48 +67,6 @@ public class ProAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         viewHolder.tv_namepro.setText(sanPham.getName());
         Glide.with(context).load(sanPham.getImage()).centerCrop().into(viewHolder.img_pro);
 
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-//        if (firebaseAuth.getCurrentUser() == null){
-////            Toast.makeText(context, "You're not logged in", Toast.LENGTH_SHORT).show();
-//        }else{
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-            reference.child(firebaseAuth.getUid()).child("Favorites").child(sanPham.getId())
-                    .addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            Log.e(TAG, "My: " + snapshot.exists());
-                            isMyFavorite = snapshot.exists();
-                            if (isMyFavorite){
-                                viewHolder.img_fave.setImageResource(R.drawable.favorite_24);
-                            }else{
-                                viewHolder.img_fave.setImageResource(R.drawable.no_favorite_24);
-                            }
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-//        }
-
-//        viewHolder.img_fave.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-//                if (firebaseAuth.getCurrentUser() == null){
-//                    Toast.makeText(context, "You're not logged in", Toast.LENGTH_SHORT).show();
-//                }else{
-//                    if (isMyFavorite){
-//                        removeFavorite(context,sanPham.getId());
-//                    }else {
-//                        addToFavorite(context,sanPham.getId());
-//                    }
-//                }
-//            }
-//        });
         viewHolder.ll_chitietsp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -143,83 +101,8 @@ public class ProAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             img_pro = view.findViewById(R.id.img_pro);
             ll_chitietsp = view.findViewById(R.id.id_chitietsp);
             tv_namepro = view.findViewById(R.id.tv_namepro);
-            img_fave = view.findViewById(R.id.img_fave);
         }
     }
 
-//    public void checkIsFavorive(Context context,String idProduct,boolean isMyFavorite){
-//        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-//        if (firebaseAuth.getCurrentUser() == null){
-////            Toast.makeText(context, "You're not logged in", Toast.LENGTH_SHORT).show();
-//        }else{
-//            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-//            reference.child(firebaseAuth.getUid()).child("Favorites").child(idProduct)
-//                    .addValueEventListener(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                            if (snapshot.exists()){
-//                                isMyFavorite(true)
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError error) {
-//
-//                        }
-//                    });
-//        }
-//
-//    }
 
-    public void addToFavorite(Context context,String idProduct){
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        if (firebaseAuth.getCurrentUser() == null){
-            Toast.makeText(context, "You're not logged in", Toast.LENGTH_SHORT).show();
-        }else{
-            long timestamp = System.currentTimeMillis();
-
-            HashMap<String , Object> hashMap = new HashMap<>();
-            hashMap.put("idProduct",idProduct);
-            hashMap.put("timeStamp",timestamp);
-
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-            reference.child(firebaseAuth.getUid()).child("Favorites").child(idProduct)
-                    .setValue(hashMap)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-                            Toast.makeText(context, "Added to your favorites list...", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(context, "failed to add to favorite due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        }
-    }
-
-    public void removeFavorite(Context context,String idProduct ){
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        if (firebaseAuth.getCurrentUser() == null){
-            Toast.makeText(context, "You're not logged in", Toast.LENGTH_SHORT).show();
-        }else{
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-            reference.child(firebaseAuth.getUid()).child("Favorites").child(idProduct)
-                    .removeValue()
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-                            Toast.makeText(context, "Removed to your favorites list...", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(context, "failed to remove to favorite due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        }
-    }
 }
