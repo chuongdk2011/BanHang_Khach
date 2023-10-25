@@ -155,7 +155,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.img_gg).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.id_linearGG).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 loginWithGG();
