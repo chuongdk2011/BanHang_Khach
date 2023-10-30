@@ -46,6 +46,50 @@
             android:layout_marginRight="10dp"/>
     </RelativeLayout>
     <androidx.cardview.widget.CardView
+        android:id="@+id/card2_infomation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        app:cardCornerRadius="3dp">
+        <RelativeLayout
+            android:id="@+id/relative2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/icon_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_taikhoan"
+                android:layout_alignParentLeft="true"
+                android:layout_margin="5dp"
+                android:layout_centerVertical="true"/>
+
+            <TextView
+                android:id="@+id/tv_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/icon_info"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="40dp"
+                android:text="Thông tin cá nhân"
+                android:textSize="20dp" />
+
+            <ImageView
+                android:id="@+id/img_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:src="@drawable/ic_chitietdialog" />
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
@@ -88,8 +132,7 @@
                         android:id="@+id/img4"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:src="@drawable/ic_cart"
-                        android:background="#075E33"
+                        android:src="@drawable/layhang"
                         android:layout_centerHorizontal="true"/>
                     <TextView
                         android:layout_width="wrap_content"
@@ -146,44 +189,30 @@
         </TableLayout>
     </androidx.cardview.widget.CardView>
     <androidx.cardview.widget.CardView
-        android:id="@+id/card2_infomation"
+        android:id="@+id/card_donhuy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        app:cardCornerRadius="3dp">
-        <RelativeLayout
-            android:id="@+id/relative2"
+        android:layout_marginTop="10dp">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp">
             <ImageView
-                android:id="@+id/icon_info"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_taikhoan"
-                android:layout_alignParentLeft="true"
-                android:layout_margin="5dp"
-                android:layout_centerVertical="true"/>
-
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/outbill"
+                android:layout_gravity="center"/>
             <TextView
-                android:id="@+id/tv_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/icon_info"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="40dp"
-                android:text="Thông tin cá nhân"
-                android:textSize="20dp" />
-            <ImageView
-                android:id="@+id/img_info"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_chitietdialog"
-                android:layout_alignParentRight="true"
-                android:layout_margin="5dp"
-                android:layout_centerVertical="true"/>
-        </RelativeLayout>
+                android:text="Đơn hàng đã hủy"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:layout_marginLeft="5dp"
+                android:layout_gravity="center"/>
+        </LinearLayout>
     </androidx.cardview.widget.CardView>
-
 </LinearLayout>

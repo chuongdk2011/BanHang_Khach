@@ -84,6 +84,9 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity
+            android:name=".Package_Bill.Activity.Billout_Activity"
+            android:exported="false" />
+        <activity
             android:name=".activity.Chitietsanpham"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
