@@ -108,9 +108,10 @@ public class CartOrderAdapter extends BaseAdapter {
                 if (soluong < 101){
                     String slmoi = String.valueOf(soluong);
                     String pricenew = String.valueOf(gianew);
-                    tonggia += giachia;
-                    Log.d(TAG, "tonggia = gianew + : " + tonggia);
-                    onclickCheck.onCheckboxTrue(tonggia);
+                    if (cbkcart.isChecked()){
+                        tonggia += giachia;
+                        onclickCheck.onCheckboxTrue(tonggia);
+                    }
                     tvprice.setText(pricenew);
                     tvsoluong.setText(slmoi);
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -131,9 +132,10 @@ public class CartOrderAdapter extends BaseAdapter {
                 if (soluong > 0){
                     String slmoi = String.valueOf(soluong);
                     String pricenew = String.valueOf(gianew);
-                    tonggia -= giachia;
-                    Log.d(TAG, "tonggia = gianew - : " + tonggia);
-                    onclickCheck.onCheckboxFalse(tonggia);
+                    if (cbkcart.isChecked()){
+                        tonggia -= giachia;
+                        onclickCheck.onCheckboxFalse(tonggia);
+                    }
                     tvprice.setText(pricenew);
                     tvsoluong.setText(slmoi);
                     FirebaseDatabase database = FirebaseDatabase.getInstance();

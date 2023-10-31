@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,6 +40,7 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
     Button btnmuahang;
     ArrayList<CartOrderDTO> list;
     CartOrderAdapter adapter;
+    ImageView imgback;
     int s = 0;
     int tongprice = 0;
     @Override
@@ -50,6 +53,12 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
         rc_listcart.setAdapter(adapter);
         getdatacartorder();
 
+        imgback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
     }
 
 
@@ -57,6 +66,7 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
         rc_listcart = findViewById(R.id.rc_view);
         tongcart = findViewById(R.id.tv_tonggia);
         btnmuahang = findViewById(R.id.btn_muahang);
+        imgback = findViewById(R.id.id_back);
     }
 
     public void getdatacartorder(){
@@ -112,7 +122,6 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
                         myRef.updateChildren(mapcartoder);
                     }
                 }
-                tongcart.setText("Tổng tiền: ");
             }
         });
     }
@@ -121,14 +130,16 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
     public void onCheckboxTrue(int tongtien) {
         s++;
         tongprice = tongtien;
-        tongcart.setText("Tổng tiền: " +String.valueOf(tongtien));
+        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
+        tongcart.setText(decimalFormat.format(tongtien) + " VND");
     }
 
     @Override
     public void onCheckboxFalse(int tongtien) {
         s--;
         tongprice = tongtien;
-        tongcart.setText("Tổng tiền: " + String.valueOf(tongtien));
+        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
+        tongcart.setText(decimalFormat.format(tongtien) + " VND");
     }
 
 }

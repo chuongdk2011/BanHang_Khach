@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.example.banhang_khach.DTO.BillDTO;
 import com.example.banhang_khach.DTO.CartOrderDTO;
 import com.example.banhang_khach.DTO.DTO_QlySanPham;
+import com.example.banhang_khach.DTO.UserDTO;
 import com.example.banhang_khach.R;
 import com.example.banhang_khach.Zalopay.Api.CreateOrder;
 import com.google.firebase.auth.FirebaseAuth;
@@ -51,6 +52,10 @@ public class BuyNow_Activity extends AppCompatActivity {
     Button btnPay, btn_addcart;
     int soluong;
     String idproduct, nameproduct, priceproduct, informationproduct, imageproduct;
+    //điịa chỉ
+    TextView tv_sdt, tv_fullname, tv_diachi, tv_thongbao, tv_sua, tv_thanhtien;
+    //String check thông tin
+    String str_hoten = "1", str_sdt = "1",str_diachi = "1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,13 +65,22 @@ public class BuyNow_Activity extends AppCompatActivity {
 
         Intent intent = getIntent();
         idproduct = intent.getStringExtra("id_product");
+
         getchitietsanpham();
         Muahang();
         ThanhtoanZaloPay();
+        diachi();
+        tv_sua.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent1 = new Intent(BuyNow_Activity.this, InformationActivity.class);
+                startActivity(intent1);
+            }
+        });
     }
     public void Anhxa(){
         btnPay = findViewById(R.id.btntesst);
-        btn_close = findViewById(R.id.btn_close);
+        btn_close = findViewById(R.id.id_back);
         btn_addcart = findViewById(R.id.btn_addcart);
         tv_dialogsoluong = findViewById(R.id.tv_soluong);
         imgpro = findViewById(R.id.img_pro);
@@ -74,6 +88,78 @@ public class BuyNow_Activity extends AppCompatActivity {
         tv_dialogprice = findViewById(R.id.tv_price);
         imgtru = findViewById(R.id.imgtru);
         imgcong = findViewById(R.id.imgcong);
+        tv_fullname = findViewById(R.id.tv_hoten);
+        tv_sdt = findViewById(R.id.tv_sdt);
+        tv_diachi = findViewById(R.id.tv_diachi);
+        tv_thongbao = findViewById(R.id.tv_thongbao);
+        tv_sua = findViewById(R.id.tv_sua);
+        tv_thanhtien = findViewById(R.id.tv_thanhtien);
+    }
+    public void diachi(){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid(); // Đặt ID của người dùng bạn muốn lấy thông tin
+        DatabaseReference userRef = databaseReference.child("Users").child(userId);
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // Dữ liệu người dùng được tìm thấy
+                    UserDTO user = dataSnapshot.getValue(UserDTO.class);
+
+                    // Kiểm tra xem có dữ liệu số điện thoại, tuổi và địa chỉ không
+                    if (user != null) {
+                        if (user != null) {
+                            int phone = user.getPhone();
+                            int defaultValue = -1; // Sử dụng -1 làm giá trị mặc định
+
+                            if (phone != defaultValue) {
+                                String phoneText = "Số điện thoại:(+84) " + String.valueOf(phone);
+                                tv_sdt.setText(phoneText);
+                            } else {
+                                tv_sdt.setVisibility(View.GONE);
+                                str_sdt = "0";
+                                Log.d(TAG, "str_sdt: " + str_sdt);
+                            }
+                        } else {
+                            // Người dùng không tồn tại hoặc lỗi xảy ra
+                        }
+                        if (user.getFullname() != null) {
+                            String fullname = user.getFullname();
+                            String fullnameText = "Họ tên: " + fullname;
+                            tv_fullname.setText(fullnameText);
+                            tv_fullname.setVisibility(View.VISIBLE); // Hiển thị TextView
+                        } else {
+                            // Dữ liệu full name chưa điền, hiển thị "chưa điền" và giữ TextView không bị ẩn
+                            tv_fullname.setText("FullName: chưa điền");
+                            tv_fullname.setVisibility(View.VISIBLE);
+                            str_hoten = "0";
+                            Log.d(TAG, "str_hoten: " + str_hoten);
+                        }
+                        if (user.getAdress() != null) {
+                            String diachi = user.getAdress();
+                            String diachiText = "Diachi: " + diachi;
+                            tv_diachi.setText(diachiText);
+                            tv_diachi.setVisibility(View.VISIBLE); // Hiển thị TextView
+                        } else {
+                            // Dữ liệu Address chưa điền, hiển thị "chưa điền" và giữ TextView không bị ẩn
+                            tv_diachi.setText("Diachi: chưa điền");
+                            tv_diachi.setVisibility(View.VISIBLE); // Hiển thị TextView
+                            str_diachi = "0";
+                            Log.d(TAG, "str_diachi: " + str_diachi);
+                        }
+                    } else {
+                        // Người dùng không tồn tại hoặc lỗi xảy ra
+                    }
+                } else {
+                    // Người dùng không
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Xử lý lỗi nếu có
+            }
+        });
     }
     public void getchitietsanpham(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
@@ -94,6 +180,7 @@ public class BuyNow_Activity extends AppCompatActivity {
                         Glide.with(BuyNow_Activity.this).load(imageproduct).centerCrop().into(imgpro);
                         tv_dialogname.setText("Tên: " + nameproduct);
                         tv_dialogprice.setText("Giá: " + priceproduct + "đ");
+                        tv_thanhtien.setText("Thành tiền: " +priceproduct + " VND");
                     }
                 }
             }
@@ -111,6 +198,8 @@ public class BuyNow_Activity extends AppCompatActivity {
                 int soluong = Integer.parseInt(tv_dialogsoluong.getText().toString().trim()) + 1;
                 if (soluong < 101) {
                     String slmoi = String.valueOf(soluong);
+                    double thanhtien = Double.parseDouble(priceproduct) * soluong;
+                    tv_thanhtien.setText("Thành tiền: " +thanhtien + " VND");
                     tv_dialogsoluong.setText(slmoi);
                 }
             }
@@ -121,6 +210,8 @@ public class BuyNow_Activity extends AppCompatActivity {
                 int soluong = Integer.parseInt(tv_dialogsoluong.getText().toString().trim()) - 1;
                 if (soluong > 0) {
                     String slmoi = String.valueOf(soluong);
+                    double thanhtien = Double.parseDouble(priceproduct) * soluong;
+                    tv_thanhtien.setText("Thành tiền: " +thanhtien + " VND");
                     tv_dialogsoluong.setText(slmoi);
                 }
             }
@@ -129,7 +220,11 @@ public class BuyNow_Activity extends AppCompatActivity {
         btn_addcart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                btnmuahang();
+                if (str_sdt.equals("0") || str_hoten.equals("0") || str_diachi.equals("0")){
+                    tv_thongbao.setText("Bạn phải nhập đủ thông tin nhận hàng !");
+                }else {
+                    btnmuahang();
+                }
             }
         });
         btn_close.setOnClickListener(new View.OnClickListener() {
