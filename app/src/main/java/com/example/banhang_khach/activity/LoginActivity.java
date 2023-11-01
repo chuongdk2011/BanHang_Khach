@@ -365,9 +365,9 @@ public class LoginActivity extends AppCompatActivity {
                             Log.w(TAG, "Fetching FCM registration token failed", task.getException());
                             return;
                         }
-                        // Lấy token
+
                         String token = task.getResult();
-                        // Lưu token vào database liên kết với UID của người dùng
+
                         String userUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                         DatabaseReference tokenRef = FirebaseDatabase.getInstance().getReference("userTokens").child(userUID);
                         tokenRef.setValue(token);
