@@ -3,8 +3,6 @@ package com.example.banhang_khach.activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
@@ -12,10 +10,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.banhang_khach.Adapter.ChatAdapter;
 import com.example.banhang_khach.DTO.ChatDTO;
+import com.example.banhang_khach.DTO.FcmMessage;
+import com.example.banhang_khach.Interface.FcmApiService;
 import com.example.banhang_khach.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -28,8 +29,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ChatActivity extends AppCompatActivity {
     ImageView img_back;
@@ -44,6 +53,8 @@ public class ChatActivity extends AppCompatActivity {
     RecyclerView rcv_chat;
     private ChildEventListener chatEventListener;
     DatabaseReference chatreference;
+
+    TextView tv_nameShop;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +83,8 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 addMessage();
+
+                sendNotification(reciverUid, ed_chat.getText().toString());
             }
         });
 
@@ -82,10 +95,9 @@ public class ChatActivity extends AppCompatActivity {
         ed_chat = findViewById(R.id.ed_msg);
         rcv_chat = findViewById(R.id.rcv_chat);
     }
+
     private void getListChat() {
         chatreference = database.getReference().child("chats").child(senderRoom).child("messages");
-
-
         chatEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, String s) {
@@ -93,13 +105,13 @@ public class ChatActivity extends AppCompatActivity {
                 list.add(newMessage);
                 adapter.notifyDataSetChanged();
 
-                // Gửi thông báo cho người nhận
-                sendNotification(newMessage);
+//                sendNotification(reciverUid, newMessage.getMessage());
+//                sendNotification(newMessage);
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, String s) {
-                adapter.notifyDataSetChanged();
+
             }
 
             @Override
@@ -119,7 +131,7 @@ public class ChatActivity extends AppCompatActivity {
 
             @Override
             public void onChildMoved(@NonNull DataSnapshot dataSnapshot, String s) {
-                adapter.notifyDataSetChanged();
+
 
             }
 
@@ -132,10 +144,70 @@ public class ChatActivity extends AppCompatActivity {
         // Đặt ChildEventListener vào tham chiếu database
         chatreference.addChildEventListener(chatEventListener);
     }
+    public void sendFcmData(String fcmToken, String content) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://fcm.googleapis.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
-    private void sendNotification(ChatDTO newMessage) {
+        FcmApiService apiService = retrofit.create(FcmApiService.class);
 
+        FcmMessage message = new FcmMessage();
+        message.setTo(fcmToken);
+
+        Map<String, String> data = new HashMap<>();
+        data.put("title", "Có Tin Nhắn Mới");
+        data.put("message", content);
+
+        message.setData(data);
+
+        Call<ResponseBody> call = apiService.sendFcmMessage(message);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    // Gửi thành công
+                    Log.d("ChatActivity", "Gửi thông báo FCM thành công");
+                } else {
+                    // Gửi thất bại
+                    Log.e("ChatActivity", "Gửi thông báo FCM thất bại");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Xảy ra lỗi
+                Log.e("ChatActivity", "Lỗi khi gửi thông báo FCM: " + t.getMessage());
+            }
+        });
     }
+
+    private void sendNotification(String recipientUID, String message) {
+        String notificationTitle = "Bạn có tin nhắn mới!";
+        String notificationMessage = message;
+
+        DatabaseReference tokenRef = FirebaseDatabase.getInstance().getReference("userTokens").child(recipientUID);
+        tokenRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String recipientToken = dataSnapshot.getValue(String.class);
+                if (recipientToken != null) {
+                    Map<String, String> dataMap = new HashMap<>();
+                    dataMap.put("title", notificationTitle);
+                    dataMap.put("message", notificationMessage);
+
+                    sendFcmData(recipientToken, notificationMessage);
+                    Log.d("ChatActivity", "Gửi thông báo đến FCM Service");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("ChatActivity", "Lỗi khi lấy mã FCM của người nhận: " + databaseError.getMessage());
+            }
+        });
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -153,9 +225,6 @@ public class ChatActivity extends AppCompatActivity {
         }
         ed_chat.setText("");
         Date date = new Date();
-
-
-
 
         database= FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = database.getReference().child("chats")
