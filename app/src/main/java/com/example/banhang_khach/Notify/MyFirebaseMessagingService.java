@@ -31,26 +31,24 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.d(TAG, "Nhận thông báo từ FCM: " + remoteMessage.getData());
 
-        // Xử lý thông báo ở đây (ví dụ: lấy dữ liệu từ remoteMessage)
 
-        // Hiển thị thông báo
         if (remoteMessage.getData() != null) {
             showNotification(remoteMessage.getData());
         }
     }
 
     private void showNotification(Map<String, String> data) {
-        // Tạo một thông báo
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_noti)
                 .setContentTitle(data.get("title"))
                 .setContentText(data.get("message"))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
-        // Tạo một NotificationManager
+
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
-        // Kiểm tra phiên bản Android và tạo kênh thông báo (channels) nếu cần
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "Channel Name";
             String description = "Channel Description";
@@ -60,7 +58,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             notificationManager.createNotificationChannel(channel);
         }
 
-        // Hiển thị thông báo
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
