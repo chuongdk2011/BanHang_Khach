@@ -161,7 +161,7 @@ public class ChatActivity extends AppCompatActivity {
         message.setTo(fcmToken);
 
         Map<String, String> data = new HashMap<>();
-        data.put("title", "Có Tin Nhắn Mới");
+        data.put("title", "Bạn có tin nhắn mới");
         data.put("message", content);
 
         message.setData(data);
@@ -187,9 +187,9 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void sendNotificationToAllAdmin(String message) {
-        String notificationTitle = "Bạn có tin nhắn mới!";
+
         Log.d("Debug", "sendNotificationToAllAdmin: "+message);
-        DatabaseReference tokensRef = FirebaseDatabase.getInstance().getReference("userTokens");
+        DatabaseReference tokensRef = FirebaseDatabase.getInstance().getReference("adminTokens");
 
         tokensRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -198,9 +198,6 @@ public class ChatActivity extends AppCompatActivity {
                     String recipientToken = userTokenSnapshot.getValue(String.class);
 
                     if (recipientToken != null) {
-                        Map<String, String> dataMap = new HashMap<>();
-                        dataMap.put("title", notificationTitle);
-                        dataMap.put("message", message);
 
                         sendFcmData(recipientToken, message);
                         Log.d("ChatActivity", "Gửi thông báo đến FCM Service");
