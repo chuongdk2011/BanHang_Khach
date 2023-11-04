@@ -33,10 +33,19 @@
         android:layout_height="match_parent"
         android:layout_margin="5dp"
         android:layout_weight="1"/>
-    <Button
+
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_huydonhang"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/my_button_bg4"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:text="Hủy đơn hanàng"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="19dp"
+        android:textStyle="bold"
         android:layout_weight="0"
-        android:text="Hủy đơn hàng" />
+        android:layout_margin="7dp" />
 </LinearLayout>

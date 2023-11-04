@@ -71,7 +71,6 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/my_button_bg4"
                 android:gravity="center"
-                android:onClick="onClick"
                 android:text="Mua hàng"
                 android:textAllCaps="false"
                 android:textColor="@color/white"

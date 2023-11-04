@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.example.banhang_khach.DTO.BillDTO;
 import com.example.banhang_khach.DTO.CartOrderDTO;
 import com.example.banhang_khach.DTO.DTO_QlySanPham;
+import com.example.banhang_khach.DTO.OrderInformationDTO;
 import com.example.banhang_khach.DTO.UserDTO;
 import com.example.banhang_khach.R;
 import com.example.banhang_khach.Zalopay.Api.CreateOrder;
@@ -113,39 +114,36 @@ public class BuyNow_Activity extends AppCompatActivity {
                             int defaultValue = -1; // Sử dụng -1 làm giá trị mặc định
 
                             if (phone != defaultValue) {
-                                String phoneText = "Số điện thoại:(+84) " + String.valueOf(phone);
+                                String phoneText = String.valueOf(phone);
                                 tv_sdt.setText(phoneText);
                             } else {
                                 tv_sdt.setVisibility(View.GONE);
                                 str_sdt = "0";
-                                Log.d(TAG, "str_sdt: " + str_sdt);
                             }
                         } else {
                             // Người dùng không tồn tại hoặc lỗi xảy ra
                         }
                         if (user.getFullname() != null) {
                             String fullname = user.getFullname();
-                            String fullnameText = "Họ tên: " + fullname;
+                            String fullnameText = fullname;
                             tv_fullname.setText(fullnameText);
                             tv_fullname.setVisibility(View.VISIBLE); // Hiển thị TextView
                         } else {
                             // Dữ liệu full name chưa điền, hiển thị "chưa điền" và giữ TextView không bị ẩn
-                            tv_fullname.setText("FullName: chưa điền");
+                            tv_fullname.setText(" chưa điền");
                             tv_fullname.setVisibility(View.VISIBLE);
                             str_hoten = "0";
-                            Log.d(TAG, "str_hoten: " + str_hoten);
                         }
                         if (user.getAdress() != null) {
                             String diachi = user.getAdress();
-                            String diachiText = "Diachi: " + diachi;
+                            String diachiText = diachi;
                             tv_diachi.setText(diachiText);
                             tv_diachi.setVisibility(View.VISIBLE); // Hiển thị TextView
                         } else {
                             // Dữ liệu Address chưa điền, hiển thị "chưa điền" và giữ TextView không bị ẩn
-                            tv_diachi.setText("Diachi: chưa điền");
+                            tv_diachi.setText(" chưa điền");
                             tv_diachi.setVisibility(View.VISIBLE); // Hiển thị TextView
                             str_diachi = "0";
-                            Log.d(TAG, "str_diachi: " + str_diachi);
                         }
                     } else {
                         // Người dùng không tồn tại hoặc lỗi xảy ra
@@ -252,11 +250,22 @@ public class BuyNow_Activity extends AppCompatActivity {
             }
         });
 
+        //thêm idbill vào bảng giỏ hàng
         UUID uuid1 = UUID.randomUUID();
         String idu = uuid1.toString().trim();
         DatabaseReference myRef = database.getReference("CartOrder/" + idu);
         CartOrderDTO cartOrderDTO = new CartOrderDTO(idu, udi, idproduct, auth.getUid(), nameproduct, soluong, priceB, imageproduct);
         myRef.setValue(cartOrderDTO);
+
+        //thêm vào bảng thông tin nhận hàng
+        String str_fullname = tv_fullname.getText().toString().trim();
+        String str_sdt = tv_sdt.getText().toString().trim();
+        String str_diachi = tv_diachi.getText().toString().trim();
+        UUID infouuid = UUID.randomUUID();
+        String str_infouuid = infouuid.toString().trim();
+        DatabaseReference myRefinfo = database.getReference("OrderInformation/" + str_infouuid);
+        OrderInformationDTO orderInformationDTO = new OrderInformationDTO(udi, str_fullname, str_sdt, str_diachi);
+        myRefinfo.setValue(orderInformationDTO);
     }
     public void ThanhtoanZaloPay(){
         StrictMode.ThreadPolicy policy = new
