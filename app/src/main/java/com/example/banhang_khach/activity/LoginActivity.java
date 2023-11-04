@@ -217,13 +217,18 @@ public class LoginActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                         if (task.isSuccessful()) {
                             FirebaseUser user = auth.getCurrentUser();
-                            HashMap<String, Object> map = new HashMap<>();
-                            map.put("id", user.getUid());
-                            map.put("fullname", user.getDisplayName());
-                            map.put("email",user.getEmail());
-                            map.put("role","User");
 
-                            database.getReference().child("Users").child(user.getUid()).setValue(map);
+                            DatabaseReference myRefId = database.getReference("Users/" + user.getUid() + "/id");
+                            myRefId.setValue(user.getUid());
+
+                            DatabaseReference myRefFullname = database.getReference("Users/" + user.getUid() + "/fullname");
+                            myRefFullname.setValue(user.getDisplayName());
+
+                            DatabaseReference myRefEmail = database.getReference("Users/" + user.getUid() + "/email");
+                            myRefEmail.setValue(user.getEmail());
+
+                            DatabaseReference myRefRole = database.getReference("Users/" + user.getUid() + "/role");
+                            myRefRole.setValue("User");
                             Toast.makeText(LoginActivity.this, "Login Email Success.", Toast.LENGTH_SHORT).show();
                             saveUserFCMToken();
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
@@ -240,7 +245,7 @@ public class LoginActivity extends AppCompatActivity {
 
         progressDialog.show();
         Log.d("abc", "handleFacebookAccessToken:" + token);
-
+        FirebaseAuth auth = FirebaseAuth.getInstance();
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         auth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -252,15 +257,21 @@ public class LoginActivity extends AppCompatActivity {
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = auth.getCurrentUser();
 
-                            HashMap<String, Object> map = new HashMap<>();
-                            map.put("id", user.getUid());
-                            map.put("fullname", user.getDisplayName());
-                            map.put("email",user.getEmail());
+                            DatabaseReference myRefId = database.getReference("Users/" + user.getUid() + "/id");
+                            myRefId.setValue(user.getUid());
+
+                            DatabaseReference myRefFullname = database.getReference("Users/" + user.getUid() + "/fullname");
+                            myRefFullname.setValue(user.getDisplayName());
                             Log.e("abc", "onComplete: " + user.getEmail() );
-                            map.put("role","User");
+                            if (user.getEmail()!=null){
+                                DatabaseReference myRefEmail = database.getReference("Users/" + user.getUid() + "/email");
+                                myRefEmail.setValue(user.getEmail());
 
+                            }
 
-                            database.getReference().child("Users").child(user.getUid()).setValue(map);
+                            DatabaseReference myRefRole = database.getReference("Users/" + user.getUid() + "/role");
+                            myRefRole.setValue("User");
+
                             Toast.makeText(LoginActivity.this, "Login Email Success.", Toast.LENGTH_SHORT).show();
                             saveUserFCMToken();
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
@@ -329,18 +340,8 @@ public class LoginActivity extends AppCompatActivity {
                             DatabaseReference myRefEmail = database.getReference("Users/" + user.getUid() + "/email");
                             myRefEmail.setValue(user.getEmail());
 
-//                            DatabaseReference myRefPassword = database.getReference("Users/" + user.getUid() + "/password");
-//                            myRefPassword.setValue(password);
-
-//                            DatabaseReference myRefFullname = database.getReference("Users/"+user.getUid()+"/fullname");
-//                            myRefFullname.setValue("");
-
-//                            DatabaseReference myRefPhone = database.getReference("Users/"+user.getUid()+"/phone");
-//                            myRefPhone.setValue("");
-
                             DatabaseReference myRefRole = database.getReference("Users/" + user.getUid() + "/role");
                             myRefRole.setValue("User");
-
 
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);
