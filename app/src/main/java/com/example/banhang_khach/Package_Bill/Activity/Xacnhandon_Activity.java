@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.banhang_khach.DTO.BillDTO;
@@ -29,9 +30,11 @@ public class Xacnhandon_Activity extends AppCompatActivity {
     ListView rc_listcart;
     ImageView id_back;
     int sl = 0;
+    TextView noProductMessage;
     public void Anhxa(){
         rc_listcart = findViewById(R.id.list_donhang);
         id_back = findViewById(R.id.id_back);
+        noProductMessage = findViewById(R.id.noProductMessage);
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +51,17 @@ public class Xacnhandon_Activity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+        //Kiểm tra và hiển thị thông báo nếu không có đon hàng
+        checkAndDisplayMessage();
+    }
+    private void checkAndDisplayMessage() {
+        if (list.isEmpty()) {
+            noProductMessage.setVisibility(TextView.VISIBLE);
+            rc_listcart.setVisibility(ListView.GONE);
+        } else {
+            noProductMessage.setVisibility(TextView.GONE);
+            rc_listcart.setVisibility(ListView.VISIBLE);
+        }
     }
 
     public void getdata(){

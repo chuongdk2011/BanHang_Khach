@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.banhang_khach.DTO.BillDTO;
 import com.example.banhang_khach.Package_Bill.Adapter.Bill_Adapter;
@@ -27,7 +28,9 @@ public class Giaohang_Activity extends AppCompatActivity {
     Bill_Adapter adapter;
     ListView rc_listcart;
     ImageView id_back;
+    TextView noProductMessage;
     public void Anhxa(){
+        noProductMessage = findViewById(R.id.noProductMessage);
         rc_listcart = findViewById(R.id.list_donhang);
         id_back = findViewById(R.id.id_back);
     }
@@ -47,6 +50,17 @@ public class Giaohang_Activity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+        //Kiểm tra và hiển thị thông báo nếu không có đon hàng
+        checkAndDisplayMessage();
+    }
+    private void checkAndDisplayMessage() {
+        if (list.isEmpty()) {
+            noProductMessage.setVisibility(TextView.VISIBLE);
+            rc_listcart.setVisibility(ListView.GONE);
+        } else {
+            noProductMessage.setVisibility(TextView.GONE);
+            rc_listcart.setVisibility(ListView.VISIBLE);
+        }
     }
 
     public void getdata(){

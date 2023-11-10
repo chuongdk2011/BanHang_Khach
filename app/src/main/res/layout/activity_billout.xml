@@ -32,4 +32,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="5dp"/>
+    <TextView
+        android:id="@+id/noProductMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Không có đơn hàng nào! "
+        android:visibility="gone"/>
 </LinearLayout>
