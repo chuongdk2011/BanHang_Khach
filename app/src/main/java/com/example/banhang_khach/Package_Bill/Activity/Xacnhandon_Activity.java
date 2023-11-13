@@ -51,17 +51,6 @@ public class Xacnhandon_Activity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        //Kiểm tra và hiển thị thông báo nếu không có đon hàng
-        checkAndDisplayMessage();
-    }
-    private void checkAndDisplayMessage() {
-        if (list.isEmpty()) {
-            noProductMessage.setVisibility(TextView.VISIBLE);
-            rc_listcart.setVisibility(ListView.GONE);
-        } else {
-            noProductMessage.setVisibility(TextView.GONE);
-            rc_listcart.setVisibility(ListView.VISIBLE);
-        }
     }
 
     public void getdata(){
@@ -79,6 +68,13 @@ public class Xacnhandon_Activity extends AppCompatActivity {
                         sl++;
                         list.add(billDTO);
                     }
+                }
+                if (list.isEmpty()) {
+                    noProductMessage.setVisibility(TextView.VISIBLE);
+                    rc_listcart.setVisibility(ListView.GONE);
+                } else {
+                    noProductMessage.setVisibility(TextView.GONE);
+                    rc_listcart.setVisibility(ListView.VISIBLE);
                 }
                 Log.d(TAG, "onDataChange: " + sl);
                 adapter.notifyDataSetChanged();
