@@ -97,7 +97,6 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
             }
         });
         onQuality(idcart);
-
     }
     public void Anhxa(){
         rc_listcart = findViewById(R.id.rc_view);

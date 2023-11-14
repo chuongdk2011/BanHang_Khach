@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
@@ -90,10 +91,14 @@ public class WebVNpayMainActivity extends AppCompatActivity {
                     String vnp_SecureHash = uri.getQueryParameter("vnp_SecureHash");
                     // Gọi phương thức để xử lý dữ liệu từ URL
                     if (loc_activity.equals("buynowactivity")){
+                        Log.d("log", "buynowactivity: " + loc_activity);
+                        Log.d("log", "buynowactivity: " + (loc_activity.equals("buynowactivity")));
                         DataFromUrl_buynowactivity(vnp_Amount, vnp_BankCode,vnp_BankTranNo, vnp_CardType, vnp_OrderInfo,
                                 vnp_PayDate, vnp_ResponseCode, vnp_TmnCode, vnp_TransactionNo, vnp_TransactionStatus,
                                 vnp_TxnRef, vnp_SecureHash);
                     }else if (loc_activity.equals("cartorderactivity")){
+                        Log.d("log", "buynowactivity: " + loc_activity);
+                        Log.d("log", "buynowactivity: " + (loc_activity.equals("buynowactivity")));
                         DataFromUrl_cartorderactivity(vnp_Amount, vnp_BankCode,vnp_BankTranNo, vnp_CardType, vnp_OrderInfo,
                                 vnp_PayDate, vnp_ResponseCode, vnp_TmnCode, vnp_TransactionNo, vnp_TransactionStatus,
                                 vnp_TxnRef, vnp_SecureHash);
@@ -117,13 +122,19 @@ public class WebVNpayMainActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                     Toast.makeText(WebVNpayMainActivity.this, "Thanh toán thành công", Toast.LENGTH_SHORT).show();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Tạo đối tượng của BuyNow_Activity
+                            BuyNow_Activity buyNowActivity = new BuyNow_Activity();
+
+                            // Gọi phương thức từ BuyNow_Activity
+                            buyNowActivity.btnmuahang(idthanhtoan);
+                        }
+                    }, 7000);
                 }
             });
-            // Tạo đối tượng của BuyNow_Activity
-            BuyNow_Activity buyNowActivity = new BuyNow_Activity();
 
-            // Gọi phương thức từ BuyNow_Activity
-            buyNowActivity.btnmuahang(idthanhtoan);
     }
 
     private void DataFromUrl_cartorderactivity(String vnp_Amount, String vnp_BankCode, String vnp_BankTranNo, String vnp_CardType,
@@ -140,12 +151,23 @@ public class WebVNpayMainActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                     Toast.makeText(WebVNpayMainActivity.this, "Thanh toán thành công", Toast.LENGTH_SHORT).show();
+                    // Tạo đối tượng của BuyNow_Activity
+                    CartOrderActivity cartOrderActivity = new CartOrderActivity();
+
+                    // Gọi phương thức từ BuyNow_Activity
+                    cartOrderActivity.muahangfirebase(idthanhtoan);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Tạo đối tượng của BuyNow_Activity
+                            CartOrderActivity cartOrderActivity = new CartOrderActivity();
+
+                            // Gọi phương thức từ BuyNow_Activity
+                            cartOrderActivity.muahangfirebase(idthanhtoan);
+                        }
+                    }, 7000);
                 }
             });
-            // Tạo đối tượng của BuyNow_Activity
-            CartOrderActivity cartOrderActivity = new CartOrderActivity();
 
-            // Gọi phương thức từ BuyNow_Activity
-            cartOrderActivity.muahangfirebase(idthanhtoan);
     }
 }

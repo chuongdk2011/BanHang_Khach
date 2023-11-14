@@ -63,16 +63,22 @@ import vn.zalopay.sdk.listeners.PayOrderListener;
 
 public class BuyNow_Activity extends AppCompatActivity {
     String TAG  = "buynow";
-    TextView tv_dialogname, tv_dialogprice, tv_dialogsoluong;
+    TextView tv_dialogname;
+    TextView tv_dialogprice;
+    static TextView tv_dialogsoluong;
     ImageView btn_close, imgpro, imgtru, imgcong;
     Button btnPay, btn_addcart,btnVnPay;
-    int soluong;
-    String idproduct, nameproduct, priceproduct, informationproduct, imageproduct;
+    static int soluong;
+    String idproduct;
+    String nameproduct;
+    static String priceproduct;
+    String informationproduct;
+    String imageproduct;
     //điịa chỉ
     TextView tv_sdt, tv_fullname, tv_diachi, tv_thongbao, tv_sua, tv_thanhtien;
     //String check thông tin
     String str_hoten = "1", str_sdt = "1",str_diachi = "1";
-    int priceB;
+    static int priceB;
     private static final String BASE_URL = "http://192.168.1.174:3000/payment/";
 
     @Override
