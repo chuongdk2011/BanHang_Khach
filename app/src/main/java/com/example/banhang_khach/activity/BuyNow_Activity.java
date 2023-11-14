@@ -26,6 +26,7 @@ import com.example.banhang_khach.DTO.DTO_QlySanPham;
 import com.example.banhang_khach.DTO.OrderInformationDTO;
 import com.example.banhang_khach.DTO.UserDTO;
 import com.example.banhang_khach.R;
+import com.example.banhang_khach.VNpay.API;
 import com.example.banhang_khach.VNpay.DTO_thanhtoan;
 import com.example.banhang_khach.VNpay.DTO_vnpay;
 import com.example.banhang_khach.VNpay.Vnpay_Retrofit;
@@ -79,7 +80,8 @@ public class BuyNow_Activity extends AppCompatActivity {
     //String check thông tin
     String str_hoten = "1", str_sdt = "1",str_diachi = "1";
     static int priceB;
-    private static final String BASE_URL = "http://192.168.1.174:3000/payment/";
+    static String url = API.URL;
+    static final String BASE_URL = url +"/payment/vnpay_return";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
