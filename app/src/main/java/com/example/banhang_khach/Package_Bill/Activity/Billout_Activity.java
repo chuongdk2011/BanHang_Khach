@@ -49,17 +49,6 @@ public class Billout_Activity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        //Kiểm tra và hiển thị thông báo nếu không có đon hàng
-        checkAndDisplayMessage();
-    }
-    private void checkAndDisplayMessage() {
-        if (list.isEmpty()) {
-            noProductMessage.setVisibility(TextView.VISIBLE);
-            rc_listcart.setVisibility(ListView.GONE);
-        } else {
-            noProductMessage.setVisibility(TextView.GONE);
-            rc_listcart.setVisibility(ListView.VISIBLE);
-        }
     }
     public void getdata(){
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -74,6 +63,13 @@ public class Billout_Activity extends AppCompatActivity {
                     if (billDTO.getStatus() == 5 && auth.getUid().equals(billDTO.getIduser())){
                         list.add(billDTO);
                     }
+                }
+                if (list.isEmpty()) {
+                    noProductMessage.setVisibility(TextView.VISIBLE);
+                    rc_listcart.setVisibility(ListView.GONE);
+                } else {
+                    noProductMessage.setVisibility(TextView.GONE);
+                    rc_listcart.setVisibility(ListView.VISIBLE);
                 }
                 adapter.notifyDataSetChanged();
             }

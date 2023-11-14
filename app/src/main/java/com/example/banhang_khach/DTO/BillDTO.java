@@ -2,7 +2,8 @@ package com.example.banhang_khach.DTO;
 
 public class BillDTO {
     String idBill;
-    String iduser;
+    String iduser, idthanhtoan;
+
     double TotalPrice;
     String dateBuy;
     int status;
@@ -10,12 +11,21 @@ public class BillDTO {
     public BillDTO() {
     }
 
-    public BillDTO(String idBill, String iduser, double totalPrice, String dateBuy, int status) {
+    public BillDTO(String idBill, String iduser, String idthanhtoan, double totalPrice, String dateBuy, int status) {
         this.idBill = idBill;
         this.iduser = iduser;
+        this.idthanhtoan = idthanhtoan;
         TotalPrice = totalPrice;
         this.dateBuy = dateBuy;
         this.status = status;
+    }
+
+    public String getIdthanhtoan() {
+        return idthanhtoan;
+    }
+
+    public void setIdthanhtoan(String idthanhtoan) {
+        this.idthanhtoan = idthanhtoan;
     }
 
     public String getIdBill() {

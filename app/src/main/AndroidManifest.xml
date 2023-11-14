@@ -7,7 +7,6 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
-      
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -21,6 +20,9 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:hardwareAccelerated,android:theme"
         tools:targetApi="31">
+        <activity
+            android:name=".VNpay.WebVNpayMainActivity"
+            android:exported="false" />
         <activity
             android:name=".activity.ChatBotActivity"
             android:exported="false" />

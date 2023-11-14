@@ -30,6 +30,9 @@ import com.example.banhang_khach.DTO.CartOrderDTO;
 import com.example.banhang_khach.DTO.OrderInformationDTO;
 import com.example.banhang_khach.DTO.UserDTO;
 import com.example.banhang_khach.R;
+import com.example.banhang_khach.VNpay.DTO_vnpay;
+import com.example.banhang_khach.VNpay.Vnpay_Retrofit;
+import com.example.banhang_khach.VNpay.WebVNpayMainActivity;
 import com.example.banhang_khach.Zalopay.Api.CreateOrder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -37,6 +40,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONObject;
 
@@ -49,6 +54,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import vn.zalopay.sdk.Environment;
 import vn.zalopay.sdk.ZaloPayError;
 import vn.zalopay.sdk.ZaloPaySDK;
@@ -58,7 +68,7 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
     String TAG = "cartoderactivity";
     ListView rc_listcart;
     TextView tongcart;
-    Button btnmuahang;
+    Button btnmuahang, btn_VnPay;
     ArrayList<CartOrderDTO> list;
     CartOrderAdapter adapter;
     ImageView imgback;
@@ -67,6 +77,9 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
     int tongprice = 0;
     //String check thông tin
     String str_hoten = "1", str_sdt = "1",str_diachi = "1";
+    TextView tv_sdt, tv_diachi, tv_fullname, tv_thongbao;
+
+    private static final String BASE_URL = "http://192.168.1.174:3000/payment/";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,16 +97,14 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
             }
         });
         onQuality(idcart);
+
     }
-
-
     public void Anhxa(){
         rc_listcart = findViewById(R.id.rc_view);
         tongcart = findViewById(R.id.tv_tonggia);
         btnmuahang = findViewById(R.id.btn_muahang);
         imgback = findViewById(R.id.id_back);
     }
-
     public void getdatacartorder(){
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -116,7 +127,6 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
             }
         });
     }
-
     @Override
     public void onQuality(ArrayList<String> idcart) {
         btnmuahang.setOnClickListener(new View.OnClickListener() {
@@ -130,7 +140,6 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
             }
         });
     }
-
     @Override
     public void onCheckboxTrue(int tongtien) {
         s++;
@@ -138,7 +147,6 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
         tongcart.setText(decimalFormat.format(tongtien) + " VND");
     }
-
     @Override
     public void onCheckboxFalse(int tongtien) {
         s--;
@@ -158,11 +166,110 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
         tvthanhtien.setText("Thành tiền: "+tongprice +" VND");
 
         //hiển thị thông tin nhận hàng
-        TextView tv_sdt, tv_diachi, tv_fullname, tv_thongbao;
         tv_thongbao = dialog.findViewById(R.id.tv_thongbao);
         tv_sdt = dialog.findViewById(R.id.tv_sdt);
         tv_diachi = dialog.findViewById(R.id.tv_diachi);
         tv_fullname = dialog.findViewById(R.id.tv_hoten);
+        diachi();
+
+
+        TextView tvsua = dialog.findViewById(R.id.tv_sua);
+        tvsua.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent1 = new Intent(CartOrderActivity.this, InformationActivity.class);
+                startActivity(intent1);
+            }
+        });
+
+        btn_VnPay = dialog.findViewById(R.id.btn_VnPay);
+        btn_VnPay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (str_sdt.equals("0") || str_hoten.equals("0") || str_diachi.equals("0")) {
+                    tv_thongbao.setText("Bạn phải nhập đủ thông tin nhận hàng !");
+                }else {
+                    DTO_vnpay dtovnpay = new DTO_vnpay();
+//                dtovnpay.setAmount((int) priceB);
+                    dtovnpay.setAmount(1000000);
+                    dtovnpay.setBankCode("NCB");
+                    postthamso(dtovnpay);
+                }
+            }
+        });
+
+        Button btndialogmua = dialog.findViewById(R.id.btn_addcart);
+        btndialogmua.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (str_sdt.equals("0") || str_hoten.equals("0") || str_diachi.equals("0")) {
+                    tv_thongbao.setText("Bạn phải nhập đủ thông tin nhận hàng !");
+                } else {
+                    //thêm vào bảng thanh toán
+                    UUID uuidthanhtoan = UUID.randomUUID();
+                    String idthanhtoan = uuidthanhtoan.toString().trim();
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference myRef_thanhtoan = database.getReference("Thanhtoan/" + idthanhtoan);
+                    Map<String, Object> mapthanhtoan = new HashMap<>();
+                    mapthanhtoan.put("idthanhtoan", idthanhtoan);
+                    mapthanhtoan.put("vnp_Amount", tongprice);
+                    mapthanhtoan.put("vnp_CardType", "Thanh toán khi nhận hàng");
+                    myRef_thanhtoan.setValue(mapthanhtoan);
+                    muahangfirebase( idthanhtoan);
+                }
+            }
+        });
+
+        //Thanh toán zalopay
+        Button btnpay = dialog.findViewById(R.id.btntesst);
+        ThanhtoanZaloPay(btnpay);
+        // Chiều rộng full màn hình
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        // Chiều cao theo dialog màn hình
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+        // Đặt vị trí của dialog ở phía dưới cùng của màn hình
+        layoutParams.gravity = Gravity.BOTTOM;
+
+        window.setAttributes(layoutParams);
+        window.setBackgroundDrawableResource(android.R.color.transparent);
+
+        dialog.show();
+    }
+    public void muahangfirebase( String idthanhtoan){
+        //Thêm bill
+        UUID uuid = UUID.randomUUID();
+        String udi = uuid.toString().trim();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+        String date = df.format(Calendar.getInstance().getTime());
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef_Bill = database.getReference("BillProduct/" + udi);
+        BillDTO billDTO = new BillDTO(udi, auth.getUid(),idthanhtoan, tongprice, date, 1);
+        myRef_Bill.setValue(billDTO, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                Toast.makeText(CartOrderActivity.this, "Cảm ơn bạn đã đặt hàng", Toast.LENGTH_SHORT).show();
+            }
+        });
+        //thêm idbill vào bảng cartorder
+        for (int i = 0; i < idcart.size(); i++) {
+            DatabaseReference myRef = database.getReference("CartOrder/" + idcart.get(i));
+            Map<String, Object> mapcartoder = new HashMap<>();
+            mapcartoder.put("idBill", udi);
+            myRef.updateChildren(mapcartoder);
+        }
+        //thêm vào bảng thông tin nhận hàng
+        String str_fullname = tv_fullname.getText().toString().trim();
+        String str_sdt = tv_sdt.getText().toString().trim();
+        String str_diachi = tv_diachi.getText().toString().trim();
+        UUID infouuid = UUID.randomUUID();
+        String str_infouuid = infouuid.toString().trim();
+        DatabaseReference myRefinfo = database.getReference("OrderInformation/" + str_infouuid);
+        OrderInformationDTO orderInformationDTO = new OrderInformationDTO(udi, str_fullname, str_sdt, str_diachi);
+        myRefinfo.setValue(orderInformationDTO);
+    }
+    public void diachi(){
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid(); // Đặt ID của người dùng bạn muốn lấy thông tin
         DatabaseReference userRef = databaseReference.child("Users").child(userId);
@@ -224,72 +331,6 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
                 // Xử lý lỗi nếu có
             }
         });
-
-        TextView tvsua = dialog.findViewById(R.id.tv_sua);
-        tvsua.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent1 = new Intent(CartOrderActivity.this, InformationActivity.class);
-                startActivity(intent1);
-            }
-        });
-
-        Button btndialogmua = dialog.findViewById(R.id.btn_addcart);
-        btndialogmua.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (str_sdt.equals("0") || str_hoten.equals("0") || str_diachi.equals("0")) {
-                    tv_thongbao.setText("Bạn phải nhập đủ thông tin nhận hàng !");
-                } else {
-                    UUID uuid = UUID.randomUUID();
-                    String udi = uuid.toString().trim();
-                    FirebaseAuth auth = FirebaseAuth.getInstance();
-                    DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
-                    String date = df.format(Calendar.getInstance().getTime());
-                    FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference myRef_Bill = database.getReference("BillProduct/" + udi);
-                    BillDTO billDTO = new BillDTO(udi, auth.getUid(), tongprice, date, 1);
-                    myRef_Bill.setValue(billDTO, new DatabaseReference.CompletionListener() {
-                        @Override
-                        public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                            Toast.makeText(CartOrderActivity.this, "Cảm ơn bạn đã đặt hàng", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    //thêm idbill vào bảng cartorder
-                    for (int i = 0; i < idcart.size(); i++) {
-                        DatabaseReference myRef = database.getReference("CartOrder/" + idcart.get(i));
-                        Map<String, Object> mapcartoder = new HashMap<>();
-                        mapcartoder.put("idBill", udi);
-                        myRef.updateChildren(mapcartoder);
-                    }
-                    //thêm vào bảng thông tin nhận hàng
-                    String str_fullname = tv_fullname.getText().toString().trim();
-                    String str_sdt = tv_sdt.getText().toString().trim();
-                    String str_diachi = tv_diachi.getText().toString().trim();
-                    UUID infouuid = UUID.randomUUID();
-                    String str_infouuid = infouuid.toString().trim();
-                    DatabaseReference myRefinfo = database.getReference("OrderInformation/" + str_infouuid);
-                    OrderInformationDTO orderInformationDTO = new OrderInformationDTO(udi, str_fullname, str_sdt, str_diachi);
-                    myRefinfo.setValue(orderInformationDTO);
-                }
-            }
-        });
-
-        //Thanh toán zalopay
-        Button btnpay = dialog.findViewById(R.id.btntesst);
-        ThanhtoanZaloPay(btnpay);
-        // Chiều rộng full màn hình
-        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-        // Chiều cao theo dialog màn hình
-        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-
-        // Đặt vị trí của dialog ở phía dưới cùng của màn hình
-        layoutParams.gravity = Gravity.BOTTOM;
-
-        window.setAttributes(layoutParams);
-        window.setBackgroundDrawableResource(android.R.color.transparent);
-
-        dialog.show();
     }
     public void ThanhtoanZaloPay(Button btnpay){
         StrictMode.ThreadPolicy policy = new
@@ -367,5 +408,44 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
         super.onNewIntent(intent);
         ZaloPaySDK.getInstance().onResult(intent);
     }
+
+    void postthamso(DTO_vnpay objUser){
+        //tạo dđối towngj chuyển đổi kiểu dữ liệu
+        Gson gson = new GsonBuilder().setLenient().create();
+        //Tạo Retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl( BASE_URL )
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        //Khởi tạo Interface
+        Vnpay_Retrofit userInterface = retrofit.create(Vnpay_Retrofit.class);
+        //Tạo Call
+        Call<DTO_vnpay> objCall = userInterface.createpaymenturl(objUser);
+
+        //Thực hiệnửi dữ liệu lên server
+        objCall.enqueue(new Callback<DTO_vnpay>() {
+            @Override
+            public void onResponse(Call<DTO_vnpay> call, Response<DTO_vnpay> response) {
+                //Kết quẳ server trả về ở đây
+                if(response.isSuccessful()){
+                    DTO_vnpay dtoVnpay = response.body();
+                    Log.d(TAG, "responseData.getData(): "+ dtoVnpay.getDataurl());
+                    Intent intent = new Intent(getApplicationContext(), WebVNpayMainActivity.class);
+                    intent.putExtra("paymentUrl", dtoVnpay.getDataurl());
+                    intent.putExtra("locactivity", "cartorderactivity");
+                    startActivity(intent);
+                }else {
+                    Log.d(TAG, "nguyen1: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DTO_vnpay> call, Throwable t) {
+                //Nếu say ra lỗi sẽ thông báo ở đây
+                Log.d(TAG, "nguyen2: " + t.getLocalizedMessage());
+            }
+        });
+    }
+
 
 }

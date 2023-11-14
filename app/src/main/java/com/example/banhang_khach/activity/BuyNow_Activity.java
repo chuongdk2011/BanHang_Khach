@@ -26,21 +26,36 @@ import com.example.banhang_khach.DTO.DTO_QlySanPham;
 import com.example.banhang_khach.DTO.OrderInformationDTO;
 import com.example.banhang_khach.DTO.UserDTO;
 import com.example.banhang_khach.R;
+import com.example.banhang_khach.VNpay.DTO_thanhtoan;
+import com.example.banhang_khach.VNpay.DTO_vnpay;
+import com.example.banhang_khach.VNpay.Vnpay_Retrofit;
+import com.example.banhang_khach.VNpay.WebVNpayMainActivity;
 import com.example.banhang_khach.Zalopay.Api.CreateOrder;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
 import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import vn.zalopay.sdk.Environment;
 import vn.zalopay.sdk.ZaloPayError;
 import vn.zalopay.sdk.ZaloPaySDK;
@@ -50,13 +65,15 @@ public class BuyNow_Activity extends AppCompatActivity {
     String TAG  = "buynow";
     TextView tv_dialogname, tv_dialogprice, tv_dialogsoluong;
     ImageView btn_close, imgpro, imgtru, imgcong;
-    Button btnPay, btn_addcart;
+    Button btnPay, btn_addcart,btnVnPay;
     int soluong;
     String idproduct, nameproduct, priceproduct, informationproduct, imageproduct;
     //điịa chỉ
     TextView tv_sdt, tv_fullname, tv_diachi, tv_thongbao, tv_sua, tv_thanhtien;
     //String check thông tin
     String str_hoten = "1", str_sdt = "1",str_diachi = "1";
+    double priceB;
+    private static final String BASE_URL = "http://192.168.1.174:3000/payment/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,9 +95,25 @@ public class BuyNow_Activity extends AppCompatActivity {
                 startActivity(intent1);
             }
         });
+
+        btnVnPay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                try {
+//                    text.payment(view);
+//                } catch (UnsupportedEncodingException e) {
+//                    throw new RuntimeException(e);
+//                }
+                DTO_vnpay dtovnpay = new DTO_vnpay();
+//                dtovnpay.setAmount((int) priceB);
+                dtovnpay.setAmount(1000000);
+                dtovnpay.setBankCode("NCB");
+                postthamso(dtovnpay);
+            }
+        });
     }
     public void Anhxa(){
-        btnPay = findViewById(R.id.btntesst);
+        btnPay = findViewById(R.id.btnzalopay);
         btn_close = findViewById(R.id.id_back);
         btn_addcart = findViewById(R.id.btn_addcart);
         tv_dialogsoluong = findViewById(R.id.tv_soluong);
@@ -95,6 +128,7 @@ public class BuyNow_Activity extends AppCompatActivity {
         tv_thongbao = findViewById(R.id.tv_thongbao);
         tv_sua = findViewById(R.id.tv_sua);
         tv_thanhtien = findViewById(R.id.tv_thanhtien);
+        btnVnPay = findViewById(R.id.btn_VnPay);
     }
     public void diachi(){
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -221,7 +255,16 @@ public class BuyNow_Activity extends AppCompatActivity {
                 if (str_sdt.equals("0") || str_hoten.equals("0") || str_diachi.equals("0")){
                     tv_thongbao.setText("Bạn phải nhập đủ thông tin nhận hàng !");
                 }else {
-                    btnmuahang();
+                    UUID uuid = UUID.randomUUID();
+                    String idthanhtoan = uuid.toString().trim();
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference myRef_thanhtoan = database.getReference("Thanhtoan/" + idthanhtoan);
+                    Map<String, Object> mapthanhtoan = new HashMap<>();
+                    mapthanhtoan.put("idthanhtoan", idthanhtoan);
+                    mapthanhtoan.put("vnp_Amount", priceB);
+                    mapthanhtoan.put("vnp_CardType", "Thanh toán khi nhận hàng");
+                    myRef_thanhtoan.setValue(mapthanhtoan);
+                    btnmuahang(idthanhtoan);
                 }
             }
         });
@@ -232,9 +275,9 @@ public class BuyNow_Activity extends AppCompatActivity {
             }
         });
     }
-    public void btnmuahang(){
+    public void btnmuahang(String idthanhtoan){
         int soluong = Integer.parseInt(tv_dialogsoluong.getText().toString().trim());
-        double priceB = Double.parseDouble(priceproduct) * soluong;
+        priceB = Double.parseDouble(priceproduct) * soluong;
         UUID uuid = UUID.randomUUID();
         String udi = uuid.toString().trim();
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -242,7 +285,7 @@ public class BuyNow_Activity extends AppCompatActivity {
         String date = df.format(Calendar.getInstance().getTime());
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef_Bill = database.getReference("BillProduct/" + udi);
-        BillDTO billDTO = new BillDTO(udi, auth.getUid(), priceB,date, 1);
+        BillDTO billDTO = new BillDTO(udi, auth.getUid(),idthanhtoan, priceB,date, 1);
         myRef_Bill.setValue(billDTO, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
@@ -342,5 +385,42 @@ public class BuyNow_Activity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         ZaloPaySDK.getInstance().onResult(intent);
+    }
+    void postthamso(DTO_vnpay objUser){
+        //tạo dđối towngj chuyển đổi kiểu dữ liệu
+        Gson gson = new GsonBuilder().setLenient().create();
+        //Tạo Retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl( BASE_URL )
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        //Khởi tạo Interface
+        Vnpay_Retrofit userInterface = retrofit.create(Vnpay_Retrofit.class);
+        //Tạo Call
+        Call<DTO_vnpay> objCall = userInterface.createpaymenturl(objUser);
+
+        //Thực hiệnửi dữ liệu lên server
+        objCall.enqueue(new Callback<DTO_vnpay>() {
+            @Override
+            public void onResponse(Call<DTO_vnpay> call, Response<DTO_vnpay> response) {
+                //Kết quẳ server trả về ở đây
+                if(response.isSuccessful()){
+                    DTO_vnpay dtoVnpay = response.body();
+                    Log.d(TAG, "responseData.getData(): "+ dtoVnpay.getDataurl());
+                    Intent intent = new Intent(getApplicationContext(), WebVNpayMainActivity.class);
+                    intent.putExtra("paymentUrl", dtoVnpay.getDataurl());
+                    intent.putExtra("locactivity", "buynowactivity");
+                    startActivity(intent);
+                }else {
+                    Log.d(TAG, "nguyen1: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DTO_vnpay> call, Throwable t) {
+                //Nếu say ra lỗi sẽ thông báo ở đây
+                Log.d(TAG, "nguyen2: " + t.getLocalizedMessage());
+            }
+        });
     }
 }

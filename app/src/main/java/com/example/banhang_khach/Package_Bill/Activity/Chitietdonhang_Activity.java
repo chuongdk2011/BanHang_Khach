@@ -59,7 +59,6 @@ public class Chitietdonhang_Activity extends AppCompatActivity {
         idbill_hoadon = intent.getStringExtra("id_bill");
         status = intent.getIntExtra("status", 1);
         id_userbill = intent.getStringExtra("");
-        Log.d(TAG, "id_bill: " + status);
         list = new ArrayList<>();
         adapter = new Chitietdonhang_Adapter(Chitietdonhang_Activity.this, list);
         lvhoadon.setAdapter(adapter);

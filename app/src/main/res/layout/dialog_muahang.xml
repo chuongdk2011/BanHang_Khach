@@ -141,4 +141,20 @@
         android:layout_weight="1"
         android:layout_margin="7dp"
         android:layout_below="@+id/btn_addcart"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_VnPay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/my_button_bg4"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:text="Thanh toán bằng VNPay"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="19dp"
+        android:textStyle="bold"
+        android:layout_weight="1"
+        android:layout_margin="7dp"
+        android:layout_below="@+id/btnzalopay"/>
 </LinearLayout>

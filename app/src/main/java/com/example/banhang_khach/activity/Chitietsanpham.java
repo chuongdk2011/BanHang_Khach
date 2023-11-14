@@ -203,7 +203,6 @@ public class Chitietsanpham extends AppCompatActivity {
 
     public void getchitietsanpham(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        Log.d(TAG, "getchitietsanpham: " + idproduct);
 
         Query query = reference.child("Products").orderByChild("id").equalTo(idproduct);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -242,13 +241,8 @@ public class Chitietsanpham extends AppCompatActivity {
                 if (snapshot.exists()) {
                     for (DataSnapshot issue : snapshot.getChildren()) {
                         CartOrderDTO cartOrderDTO = issue.getValue(CartOrderDTO.class);
-                        Log.d(TAG, "checkbill: " + (cartOrderDTO.getIdBill().equalsIgnoreCase("") == true) );
-                        Log.d(TAG, "checkuser: " + (auth.getUid().equals(cartOrderDTO.getIduser())) );
-                        Log.d(TAG, "checkuser + bill: " + (cartOrderDTO.getIdBill().equalsIgnoreCase("") == true
-                                && auth.getUid().equals(cartOrderDTO.getIduser())) );
                         if(cartOrderDTO.getIdBill().equalsIgnoreCase("") == true
                                 && auth.getUid().equals(cartOrderDTO.getIduser())){
-                            Log.d(TAG, "onDataChange: " + (cartOrderDTO.getIdBill().equalsIgnoreCase("") == true));
                             checkaddnull = 1;
                         }
                     }
@@ -322,7 +316,6 @@ public class Chitietsanpham extends AppCompatActivity {
             rcv_cmt.setVisibility(View.VISIBLE);
         }
         slbl = listCMT.size();
-        Log.d(TAG, "showComment: "+listCMT.size());
         tv_slcmt.setText(slbl + " bình luận");
 
         img_close.setOnClickListener(new View.OnClickListener() {
@@ -390,9 +383,6 @@ public class Chitietsanpham extends AppCompatActivity {
                 if (dataSnapshot.exists()) {
 
                     userDTO = dataSnapshot.getValue(UserDTO.class);
-
-                    Log.d("chuongdk", "onDataChange:  Name user = " + userDTO.getFullname());
-                    Log.d("chuongdk", "onDataChange: " + userDTO.getId());
                 } else {
                     Toast.makeText(Chitietsanpham.this, "Id người dùng không hợp lệ", Toast.LENGTH_SHORT).show();
                 }
