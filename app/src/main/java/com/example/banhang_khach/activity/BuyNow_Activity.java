@@ -72,7 +72,7 @@ public class BuyNow_Activity extends AppCompatActivity {
     TextView tv_sdt, tv_fullname, tv_diachi, tv_thongbao, tv_sua, tv_thanhtien;
     //String check thông tin
     String str_hoten = "1", str_sdt = "1",str_diachi = "1";
-    double priceB;
+    int priceB;
     private static final String BASE_URL = "http://192.168.1.174:3000/payment/";
 
     @Override
@@ -99,14 +99,8 @@ public class BuyNow_Activity extends AppCompatActivity {
         btnVnPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                try {
-//                    text.payment(view);
-//                } catch (UnsupportedEncodingException e) {
-//                    throw new RuntimeException(e);
-//                }
                 DTO_vnpay dtovnpay = new DTO_vnpay();
-//                dtovnpay.setAmount((int) priceB);
-                dtovnpay.setAmount(1000000);
+                dtovnpay.setAmount(100000);
                 dtovnpay.setBankCode("NCB");
                 postthamso(dtovnpay);
             }
@@ -277,7 +271,7 @@ public class BuyNow_Activity extends AppCompatActivity {
     }
     public void btnmuahang(String idthanhtoan){
         int soluong = Integer.parseInt(tv_dialogsoluong.getText().toString().trim());
-        priceB = Double.parseDouble(priceproduct) * soluong;
+        priceB = (int) (Double.parseDouble(priceproduct) * soluong);
         UUID uuid = UUID.randomUUID();
         String udi = uuid.toString().trim();
         FirebaseAuth auth = FirebaseAuth.getInstance();

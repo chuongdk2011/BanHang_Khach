@@ -4,14 +4,14 @@ public class BillDTO {
     String idBill;
     String iduser, idthanhtoan;
 
-    double TotalPrice;
+    int TotalPrice;
     String dateBuy;
     int status;
 
     public BillDTO() {
     }
 
-    public BillDTO(String idBill, String iduser, String idthanhtoan, double totalPrice, String dateBuy, int status) {
+    public BillDTO(String idBill, String iduser, String idthanhtoan, int totalPrice, String dateBuy, int status) {
         this.idBill = idBill;
         this.iduser = iduser;
         this.idthanhtoan = idthanhtoan;
@@ -48,7 +48,7 @@ public class BillDTO {
         return TotalPrice;
     }
 
-    public void setTotalPrice(double totalPrice) {
+    public void setTotalPrice(int totalPrice) {
         TotalPrice = totalPrice;
     }
 
