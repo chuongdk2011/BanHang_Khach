@@ -81,7 +81,7 @@ public class BuyNow_Activity extends AppCompatActivity {
     String str_hoten = "1", str_sdt = "1",str_diachi = "1";
     static int priceB;
     static String url = API.URL;
-    static final String BASE_URL = url +"/payment/vnpay_return";
+    static final String BASE_URL = url +"/payment/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
