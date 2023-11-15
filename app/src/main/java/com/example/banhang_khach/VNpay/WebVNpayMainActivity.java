@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.banhang_khach.DTO.BillDTO;
 import com.example.banhang_khach.DTO.CartOrderDTO;
+import com.example.banhang_khach.DTO.GlobalData_instance;
 import com.example.banhang_khach.DTO.OrderInformationDTO;
 import com.example.banhang_khach.R;
 import com.example.banhang_khach.activity.BuyNow_Activity;
@@ -28,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.UUID;
 
@@ -128,10 +130,24 @@ public class WebVNpayMainActivity extends AppCompatActivity {
                             // Tạo đối tượng của BuyNow_Activity
                             BuyNow_Activity buyNowActivity = new BuyNow_Activity();
 
+                            // Sử dụng class GlobalData để lấy thông tin
+                            GlobalData_instance globalData = GlobalData_instance.getInstance();
+                            String string_diachi = globalData.getDiachi();
+                            String string_sdt = globalData.getSdt();
+                            String string_fullname = globalData.getFullname();
+                            Log.d("string_fullname", "run: " + string_fullname);
+                            int tongprice = globalData.getTongprice();
+                            int soluong = globalData.getSoluong();
+                            String idproduct = globalData.getIdproduct();
+                            String imageproduct = globalData.getImageproduct();
+                            String nameproduct = globalData.getNameproduct();
+
                             // Gọi phương thức từ BuyNow_Activity
-                            buyNowActivity.btnmuahang(idthanhtoan);
+                            buyNowActivity.btnmuahang(idthanhtoan, string_fullname,string_sdt, string_diachi, soluong,
+                                    tongprice, idproduct, nameproduct, imageproduct);
+                            onBackPressed();
                         }
-                    }, 7000);
+                    }, 10000);
                 }
             });
 
@@ -151,21 +167,26 @@ public class WebVNpayMainActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                     Toast.makeText(WebVNpayMainActivity.this, "Thanh toán thành công", Toast.LENGTH_SHORT).show();
-                    // Tạo đối tượng của BuyNow_Activity
-                    CartOrderActivity cartOrderActivity = new CartOrderActivity();
-
-                    // Gọi phương thức từ BuyNow_Activity
-                    cartOrderActivity.muahangfirebase(idthanhtoan);
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             // Tạo đối tượng của BuyNow_Activity
                             CartOrderActivity cartOrderActivity = new CartOrderActivity();
 
+                            // Sử dụng class GlobalData để lấy thông tin
+                            GlobalData_instance globalData = GlobalData_instance.getInstance();
+                            ArrayList<String> listidcart = globalData.getArrayidcart();
+                            Log.d("listidcart", "run: " +listidcart);
+                            String string_diachi = globalData.getDiachi();
+                            String string_sdt = globalData.getSdt();
+                            int tongprice = globalData.getTongprice();
+                            String string_fullname = globalData.getFullname();
+
                             // Gọi phương thức từ BuyNow_Activity
-                            cartOrderActivity.muahangfirebase(idthanhtoan);
+                            cartOrderActivity.muahangfirebase(idthanhtoan, string_fullname, string_sdt, string_diachi, tongprice, listidcart);
+                            onBackPressed();
                         }
-                    }, 7000);
+                    }, 10000);
                 }
             });
 

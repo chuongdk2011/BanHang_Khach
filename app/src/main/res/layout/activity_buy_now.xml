@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:text=""
         android:textColor="#BC0B0B"
-        android:textSize="15dp"
+        android:textSize="20dp"
         android:textStyle="bold"
         android:gravity="center"/>
 
@@ -185,13 +185,13 @@
     </RelativeLayout>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_addcart"
+        android:id="@+id/btnthanhtoan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/my_button_bg4"
         android:gravity="center"
         android:onClick="onClick"
-        android:text="Thanh toán khi nhận hàng"
+        android:text="Chọn phương thức thanh toán"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="19dp"
@@ -199,35 +199,4 @@
         android:layout_weight="1"
         android:layout_margin="7dp"
         android:layout_below="@id/img_pro"/>
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnzalopay"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/my_button_bg4"
-        android:gravity="center"
-        android:onClick="onClick"
-        android:text="Thanh toán bằng zalopay"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="19dp"
-        android:textStyle="bold"
-        android:layout_weight="1"
-        android:layout_margin="7dp"
-        android:layout_below="@+id/btn_addcart"/>
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_VnPay"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/my_button_bg4"
-        android:gravity="center"
-        android:onClick="onClick"
-        android:text="Thanh toán bằng VNPay"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="19dp"
-        android:textStyle="bold"
-        android:layout_weight="1"
-        android:layout_margin="7dp"
-        android:layout_below="@+id/btnzalopay"/>
 </LinearLayout>

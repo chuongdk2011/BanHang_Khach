@@ -27,9 +27,11 @@ import android.widget.Toast;
 import com.example.banhang_khach.Adapter.CartOrderAdapter;
 import com.example.banhang_khach.DTO.BillDTO;
 import com.example.banhang_khach.DTO.CartOrderDTO;
+import com.example.banhang_khach.DTO.GlobalData_instance;
 import com.example.banhang_khach.DTO.OrderInformationDTO;
 import com.example.banhang_khach.DTO.UserDTO;
 import com.example.banhang_khach.R;
+import com.example.banhang_khach.VNpay.API;
 import com.example.banhang_khach.VNpay.DTO_vnpay;
 import com.example.banhang_khach.VNpay.Vnpay_Retrofit;
 import com.example.banhang_khach.VNpay.WebVNpayMainActivity;
@@ -72,14 +74,15 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
     ArrayList<CartOrderDTO> list;
     CartOrderAdapter adapter;
     ImageView imgback;
-    ArrayList<String> idcart;
+    Dialog dialog;
+    ArrayList<String> listidcart;
     int s = 0;
     int tongprice = 0;
     //String check thông tin
     String str_hoten = "1", str_sdt = "1",str_diachi = "1";
     TextView tv_sdt, tv_diachi, tv_fullname, tv_thongbao;
-
-    private static final String BASE_URL = "http://192.168.1.174:3000/payment/";
+    static String url = API.URL;
+    static final String BASE_URL = url +"/payment/";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,7 +99,7 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
                 onBackPressed();
             }
         });
-        onQuality(idcart);
+        onQuality(listidcart);
     }
     public void Anhxa(){
         rc_listcart = findViewById(R.id.rc_view);
@@ -154,7 +157,7 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
         tongcart.setText(decimalFormat.format(tongtien) + " VND");
     }
     public void dialog(ArrayList<String> idcart) {
-        Dialog dialog = new Dialog(CartOrderActivity.this);
+        dialog = new Dialog(CartOrderActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_muahang);
 
@@ -189,7 +192,6 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
                     tv_thongbao.setText("Bạn phải nhập đủ thông tin nhận hàng !");
                 }else {
                     DTO_vnpay dtovnpay = new DTO_vnpay();
-//                dtovnpay.setAmount((int) priceB);
                     dtovnpay.setAmount(1000000);
                     dtovnpay.setBankCode("NCB");
                     postthamso(dtovnpay);
@@ -198,6 +200,18 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
         });
 
         Button btndialogmua = dialog.findViewById(R.id.btn_addcart);
+        // Thêm vào bảng thông tin nhận hàng
+        String string_fullname = tv_fullname.getText().toString().trim();
+        String string_sdt = tv_sdt.getText().toString().trim();
+        String string_diachi = tv_diachi.getText().toString().trim();
+
+        // Sử dụng class GlobalData để lưu trữ thông tin
+        GlobalData_instance globalData = GlobalData_instance.getInstance();
+        globalData.setArrayidcart(idcart);
+        globalData.setDiachi(string_diachi);
+        globalData.setFullname(string_fullname);
+        globalData.setSdt(string_sdt);
+        globalData.setTongprice(tongprice);
         btndialogmua.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -214,7 +228,8 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
                     mapthanhtoan.put("vnp_Amount", tongprice);
                     mapthanhtoan.put("vnp_CardType", "Thanh toán khi nhận hàng");
                     myRef_thanhtoan.setValue(mapthanhtoan);
-                    muahangfirebase( idthanhtoan);
+
+                    muahangfirebase( idthanhtoan, string_fullname, string_sdt, string_diachi, tongprice, idcart);
                 }
             }
         });
@@ -235,7 +250,8 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
 
         dialog.show();
     }
-    public void muahangfirebase( String idthanhtoan){
+    public void muahangfirebase( String idthanhtoan, String string_fullname, String string_sdt,
+                                 String string_diachi, int tongprice, ArrayList<String> idcart){
         //Thêm bill
         UUID uuid = UUID.randomUUID();
         String udi = uuid.toString().trim();
@@ -245,12 +261,7 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef_Bill = database.getReference("BillProduct/" + udi);
         BillDTO billDTO = new BillDTO(udi, auth.getUid(),idthanhtoan, tongprice, date, 1);
-        myRef_Bill.setValue(billDTO, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                Toast.makeText(CartOrderActivity.this, "Cảm ơn bạn đã đặt hàng", Toast.LENGTH_SHORT).show();
-            }
-        });
+        myRef_Bill.setValue(billDTO);
         //thêm idbill vào bảng cartorder
         for (int i = 0; i < idcart.size(); i++) {
             DatabaseReference myRef = database.getReference("CartOrder/" + idcart.get(i));
@@ -259,13 +270,10 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
             myRef.updateChildren(mapcartoder);
         }
         //thêm vào bảng thông tin nhận hàng
-        String str_fullname = tv_fullname.getText().toString().trim();
-        String str_sdt = tv_sdt.getText().toString().trim();
-        String str_diachi = tv_diachi.getText().toString().trim();
         UUID infouuid = UUID.randomUUID();
         String str_infouuid = infouuid.toString().trim();
         DatabaseReference myRefinfo = database.getReference("OrderInformation/" + str_infouuid);
-        OrderInformationDTO orderInformationDTO = new OrderInformationDTO(udi, str_fullname, str_sdt, str_diachi);
+        OrderInformationDTO orderInformationDTO = new OrderInformationDTO(udi, string_fullname, string_sdt, string_diachi);
         myRefinfo.setValue(orderInformationDTO);
     }
     public void diachi(){

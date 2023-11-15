@@ -7,13 +7,18 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,6 +28,7 @@ import com.bumptech.glide.Glide;
 import com.example.banhang_khach.DTO.BillDTO;
 import com.example.banhang_khach.DTO.CartOrderDTO;
 import com.example.banhang_khach.DTO.DTO_QlySanPham;
+import com.example.banhang_khach.DTO.GlobalData_instance;
 import com.example.banhang_khach.DTO.OrderInformationDTO;
 import com.example.banhang_khach.DTO.UserDTO;
 import com.example.banhang_khach.R;
@@ -64,24 +70,18 @@ import vn.zalopay.sdk.listeners.PayOrderListener;
 
 public class BuyNow_Activity extends AppCompatActivity {
     String TAG  = "buynow";
-    TextView tv_dialogname;
-    TextView tv_dialogprice;
-    static TextView tv_dialogsoluong;
+    TextView tv_dialogname, tv_dialogprice, tv_dialogsoluong;
     ImageView btn_close, imgpro, imgtru, imgcong;
-    Button btnPay, btn_addcart,btnVnPay;
-    static int soluong;
-    String idproduct;
-    String nameproduct;
-    static String priceproduct;
-    String informationproduct;
-    String imageproduct;
+    Button btnthanhtoan, btnPay;
+    String idproduct, nameproduct,priceproduct, informationproduct,imageproduct;
     //điịa chỉ
     TextView tv_sdt, tv_fullname, tv_diachi, tv_thongbao, tv_sua, tv_thanhtien;
     //String check thông tin
     String str_hoten = "1", str_sdt = "1",str_diachi = "1";
-    static int priceB;
+    int sl, tongprice;
     static String url = API.URL;
     static final String BASE_URL = url +"/payment/";
+    Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +94,6 @@ public class BuyNow_Activity extends AppCompatActivity {
 
         getchitietsanpham();
         Muahang();
-        ThanhtoanZaloPay();
         diachi();
         tv_sua.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,21 +102,9 @@ public class BuyNow_Activity extends AppCompatActivity {
                 startActivity(intent1);
             }
         });
-
-        btnVnPay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DTO_vnpay dtovnpay = new DTO_vnpay();
-                dtovnpay.setAmount(100000);
-                dtovnpay.setBankCode("NCB");
-                postthamso(dtovnpay);
-            }
-        });
     }
     public void Anhxa(){
-        btnPay = findViewById(R.id.btnzalopay);
         btn_close = findViewById(R.id.id_back);
-        btn_addcart = findViewById(R.id.btn_addcart);
         tv_dialogsoluong = findViewById(R.id.tv_soluong);
         imgpro = findViewById(R.id.img_pro);
         tv_dialogname = findViewById(R.id.tv_name);
@@ -130,7 +117,7 @@ public class BuyNow_Activity extends AppCompatActivity {
         tv_thongbao = findViewById(R.id.tv_thongbao);
         tv_sua = findViewById(R.id.tv_sua);
         tv_thanhtien = findViewById(R.id.tv_thanhtien);
-        btnVnPay = findViewById(R.id.btn_VnPay);
+        btnthanhtoan = findViewById(R.id.btnthanhtoan);
     }
     public void diachi(){
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -225,7 +212,6 @@ public class BuyNow_Activity extends AppCompatActivity {
         });
     }
     public void Muahang(){
-        soluong = Integer.parseInt(tv_dialogsoluong.getText().toString().trim());
         imgcong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -251,23 +237,10 @@ public class BuyNow_Activity extends AppCompatActivity {
             }
         });
 
-        btn_addcart.setOnClickListener(new View.OnClickListener() {
+        btnthanhtoan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (str_sdt.equals("0") || str_hoten.equals("0") || str_diachi.equals("0")){
-                    tv_thongbao.setText("Bạn phải nhập đủ thông tin nhận hàng !");
-                }else {
-                    UUID uuid = UUID.randomUUID();
-                    String idthanhtoan = uuid.toString().trim();
-                    FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference myRef_thanhtoan = database.getReference("Thanhtoan/" + idthanhtoan);
-                    Map<String, Object> mapthanhtoan = new HashMap<>();
-                    mapthanhtoan.put("idthanhtoan", idthanhtoan);
-                    mapthanhtoan.put("vnp_Amount", priceB);
-                    mapthanhtoan.put("vnp_CardType", "Thanh toán khi nhận hàng");
-                    myRef_thanhtoan.setValue(mapthanhtoan);
-                    btnmuahang(idthanhtoan);
-                }
+                dialog_thanhtoan();
             }
         });
         btn_close.setOnClickListener(new View.OnClickListener() {
@@ -277,9 +250,87 @@ public class BuyNow_Activity extends AppCompatActivity {
             }
         });
     }
-    public void btnmuahang(String idthanhtoan){
-        int soluong = Integer.parseInt(tv_dialogsoluong.getText().toString().trim());
-        priceB = (int) (Double.parseDouble(priceproduct) * soluong);
+    public void dialog_thanhtoan(){
+        dialog = new Dialog(BuyNow_Activity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_chonthanhtoan);
+
+        Window window = dialog.getWindow();
+        WindowManager.LayoutParams layoutParams = window.getAttributes();
+        btnPay = dialog.findViewById(R.id.btnzalopay);
+        ThanhtoanZaloPay(btnPay);
+
+        // Thêm vào bảng thông tin nhận hàng
+        String string_fullname = tv_fullname.getText().toString().trim();
+        String string_sdt = tv_sdt.getText().toString().trim();
+        String string_diachi = tv_diachi.getText().toString().trim();
+        sl = Integer.parseInt(tv_dialogsoluong.getText().toString().trim());
+        tongprice =(Integer.parseInt(priceproduct) * sl);
+        // Sử dụng class GlobalData để lưu trữ thông tin
+        GlobalData_instance globalData = GlobalData_instance.getInstance();
+        globalData.setDiachi(string_diachi);
+        globalData.setFullname(string_fullname);
+        globalData.setSdt(string_sdt);
+        globalData.setTongprice(tongprice);
+        globalData.setSoluong(sl);
+        globalData.setIdproduct(idproduct);
+        globalData.setNameproduct(nameproduct);
+        globalData.setImageproduct(imageproduct);
+
+        Button btnvnpay = dialog.findViewById(R.id.btn_VnPay);
+        btnvnpay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DTO_vnpay dtovnpay = new DTO_vnpay();
+                dtovnpay.setAmount(100000);
+                dtovnpay.setBankCode("NCB");
+                postthamso(dtovnpay);
+            }
+        });
+
+        Button btn_nhanhang = dialog.findViewById(R.id.btn_nhanhang);
+        btn_nhanhang.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (str_sdt.equals("0") || str_hoten.equals("0") || str_diachi.equals("0")){
+                    tv_thongbao.setText("Bạn phải nhập đủ thông tin nhận hàng !");
+                }else {
+
+                    UUID uuid = UUID.randomUUID();
+                    String idthanhtoan = uuid.toString().trim();
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference myRef_thanhtoan = database.getReference("Thanhtoan/" + idthanhtoan);
+                    Map<String, Object> mapthanhtoan = new HashMap<>();
+                    mapthanhtoan.put("idthanhtoan", idthanhtoan);
+                    mapthanhtoan.put("vnp_Amount", tongprice);
+                    mapthanhtoan.put("vnp_CardType", "Thanh toán khi nhận hàng");
+                    myRef_thanhtoan.setValue(mapthanhtoan);
+
+                    btnmuahang(idthanhtoan, string_fullname,string_sdt, string_diachi, sl,
+                            tongprice, idproduct, nameproduct, imageproduct);
+                    dialog.dismiss();
+                    tv_thongbao.setText("Đặt hàng thành công");
+                }
+            }
+        });
+
+
+        // Chiều rộng full màn hình
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        // Chiều cao theo dialog màn hình
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+        // Đặt vị trí của dialog ở phía dưới cùng của màn hình
+        layoutParams.gravity = Gravity.BOTTOM;
+
+        window.setAttributes(layoutParams);
+        window.setBackgroundDrawableResource(android.R.color.transparent);
+
+        dialog.show();
+    }
+    public void btnmuahang(String idthanhtoan, String string_fullname,String string_sdt, String string_diachi, int soluong,
+                           int tongprice, String idproduct, String nameproduct, String imageproduct){
+
         UUID uuid = UUID.randomUUID();
         String udi = uuid.toString().trim();
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -287,32 +338,24 @@ public class BuyNow_Activity extends AppCompatActivity {
         String date = df.format(Calendar.getInstance().getTime());
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef_Bill = database.getReference("BillProduct/" + udi);
-        BillDTO billDTO = new BillDTO(udi, auth.getUid(),idthanhtoan, priceB,date, 1);
-        myRef_Bill.setValue(billDTO, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                Toast.makeText(BuyNow_Activity.this, "Cảm ơn bạn đã đặt hàng", Toast.LENGTH_SHORT).show();
-            }
-        });
+        BillDTO billDTO = new BillDTO(udi, auth.getUid(),idthanhtoan, tongprice,date, 1);
+        myRef_Bill.setValue(billDTO);
 
         //thêm idbill vào bảng giỏ hàng
         UUID uuid1 = UUID.randomUUID();
         String idu = uuid1.toString().trim();
         DatabaseReference myRef = database.getReference("CartOrder/" + idu);
-        CartOrderDTO cartOrderDTO = new CartOrderDTO(idu, udi, idproduct, auth.getUid(), nameproduct, soluong, priceB, imageproduct);
+        CartOrderDTO cartOrderDTO = new CartOrderDTO(idu, udi, idproduct, auth.getUid(), nameproduct, soluong, tongprice, imageproduct);
         myRef.setValue(cartOrderDTO);
 
         //thêm vào bảng thông tin nhận hàng
-        String str_fullname = tv_fullname.getText().toString().trim();
-        String str_sdt = tv_sdt.getText().toString().trim();
-        String str_diachi = tv_diachi.getText().toString().trim();
         UUID infouuid = UUID.randomUUID();
         String str_infouuid = infouuid.toString().trim();
         DatabaseReference myRefinfo = database.getReference("OrderInformation/" + str_infouuid);
-        OrderInformationDTO orderInformationDTO = new OrderInformationDTO(udi, str_fullname, str_sdt, str_diachi);
+        OrderInformationDTO orderInformationDTO = new OrderInformationDTO(udi, string_fullname,string_sdt, string_diachi);
         myRefinfo.setValue(orderInformationDTO);
     }
-    public void ThanhtoanZaloPay(){
+    public void ThanhtoanZaloPay(Button btnPay){
         StrictMode.ThreadPolicy policy = new
                 StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -425,4 +468,5 @@ public class BuyNow_Activity extends AppCompatActivity {
             }
         });
     }
+
 }
