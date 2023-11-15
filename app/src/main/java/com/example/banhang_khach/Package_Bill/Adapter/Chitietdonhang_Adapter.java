@@ -58,7 +58,6 @@ public class Chitietdonhang_Adapter extends BaseAdapter {
 
         Glide.with(context).load(cartOrderDTO.getImage()).centerCrop().into(img_itemgio);
         tvnamesp.setText("Tên sản phẩm: " + cartOrderDTO.getNamesp());
-        Log.d(TAG, "namesp: " + cartOrderDTO.getNamesp());
         tvgia.setText("Giá: " + cartOrderDTO.getPrice());
         tv_soluong.setText("Số lượng: " + cartOrderDTO.getSoluong() + "");
         return viewok;

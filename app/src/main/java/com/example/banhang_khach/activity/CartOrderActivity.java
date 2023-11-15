@@ -190,9 +190,11 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
             public void onClick(View view) {
                 if (str_sdt.equals("0") || str_hoten.equals("0") || str_diachi.equals("0")) {
                     tv_thongbao.setText("Bạn phải nhập đủ thông tin nhận hàng !");
-                }else {
+                }else if (tongprice <= 20000){
+                    tv_thongbao.setText("Đơn giá phải trên 20,000 VND mới thanh toán được VNPay");
+                } else {
                     DTO_vnpay dtovnpay = new DTO_vnpay();
-                    dtovnpay.setAmount(1000000);
+                    dtovnpay.setAmount(tongprice);
                     dtovnpay.setBankCode("NCB");
                     postthamso(dtovnpay);
                 }
@@ -415,7 +417,6 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
         super.onNewIntent(intent);
         ZaloPaySDK.getInstance().onResult(intent);
     }
-
     void postthamso(DTO_vnpay objUser){
         //tạo dđối towngj chuyển đổi kiểu dữ liệu
         Gson gson = new GsonBuilder().setLenient().create();
@@ -453,6 +454,4 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
             }
         });
     }
-
-
 }

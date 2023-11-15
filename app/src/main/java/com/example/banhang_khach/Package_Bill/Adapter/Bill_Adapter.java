@@ -62,7 +62,7 @@ public class Bill_Adapter extends BaseAdapter {
                 intent.putExtra("id_bill", billDTO.getIdBill());
                 intent.putExtra("status", billDTO.getStatus());
                 intent.putExtra("id_user", billDTO.getIduser());
-                Log.d(TAG, "id_bill: " +billDTO.getStatus());
+                intent.putExtra("idthanhtoan", billDTO.getIdthanhtoan());
                 context1.startActivity(intent);
             }
         });

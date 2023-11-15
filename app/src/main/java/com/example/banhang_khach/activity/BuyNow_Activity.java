@@ -130,15 +130,14 @@ public class BuyNow_Activity extends AppCompatActivity {
                     // Dữ liệu người dùng được tìm thấy
                     UserDTO user = dataSnapshot.getValue(UserDTO.class);
 
-                    // Kiểm tra xem có dữ liệu số điện thoại, tuổi và địa chỉ không
+                    // Kiểm tra xem có dữ liệu số điện thoại,địa chỉ không
                     if (user != null) {
                         if (user != null) {
                             int phone = user.getPhone();
                             int defaultValue = -1; // Sử dụng -1 làm giá trị mặc định
 
                             if (phone != defaultValue) {
-                                String phoneText = String.valueOf(phone);
-                                tv_sdt.setText(phoneText);
+                                tv_sdt.setText(""+user.getPhone());
                             } else {
                                 tv_sdt.setVisibility(View.GONE);
                                 str_sdt = "0";
@@ -147,9 +146,7 @@ public class BuyNow_Activity extends AppCompatActivity {
                             // Người dùng không tồn tại hoặc lỗi xảy ra
                         }
                         if (user.getFullname() != null) {
-                            String fullname = user.getFullname();
-                            String fullnameText = fullname;
-                            tv_fullname.setText(fullnameText);
+                            tv_fullname.setText(user.getFullname());
                             tv_fullname.setVisibility(View.VISIBLE); // Hiển thị TextView
                         } else {
                             // Dữ liệu full name chưa điền, hiển thị "chưa điền" và giữ TextView không bị ẩn
@@ -158,9 +155,7 @@ public class BuyNow_Activity extends AppCompatActivity {
                             str_hoten = "0";
                         }
                         if (user.getAdress() != null) {
-                            String diachi = user.getAdress();
-                            String diachiText = diachi;
-                            tv_diachi.setText(diachiText);
+                            tv_diachi.setText(user.getAdress());
                             tv_diachi.setVisibility(View.VISIBLE); // Hiển thị TextView
                         } else {
                             // Dữ liệu Address chưa điền, hiển thị "chưa điền" và giữ TextView không bị ẩn
@@ -184,7 +179,6 @@ public class BuyNow_Activity extends AppCompatActivity {
     }
     public void getchitietsanpham(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        Log.d(TAG, "getchitietsanpham: " + idproduct);
 
         Query query = reference.child("Products").orderByChild("id").equalTo(idproduct);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -281,10 +275,15 @@ public class BuyNow_Activity extends AppCompatActivity {
         btnvnpay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DTO_vnpay dtovnpay = new DTO_vnpay();
-                dtovnpay.setAmount(100000);
-                dtovnpay.setBankCode("NCB");
-                postthamso(dtovnpay);
+                if (tongprice <= 20000){
+                    Toast.makeText(BuyNow_Activity.this, "Đơn giá phải trên 20,000 VND mới thanh toán được VNPay", Toast.LENGTH_SHORT).show();
+                }else {
+                    DTO_vnpay dtovnpay = new DTO_vnpay();
+                    dtovnpay.setAmount(tongprice);
+                    dtovnpay.setBankCode("NCB");
+                    postthamso(dtovnpay);
+                    dialog.dismiss();
+                }
             }
         });
 
@@ -468,5 +467,9 @@ public class BuyNow_Activity extends AppCompatActivity {
             }
         });
     }
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        diachi();
+    }
 }

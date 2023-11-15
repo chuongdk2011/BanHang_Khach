@@ -56,7 +56,6 @@ public class Xacnhandon_Activity extends AppCompatActivity {
     public void getdata(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        Log.d(TAG, "getdata: " + auth.getUid());
         DatabaseReference myRefId = database.getReference("BillProduct");
         myRefId.addValueEventListener(new ValueEventListener() {
             @Override
@@ -76,7 +75,6 @@ public class Xacnhandon_Activity extends AppCompatActivity {
                     noProductMessage.setVisibility(TextView.GONE);
                     rc_listcart.setVisibility(ListView.VISIBLE);
                 }
-                Log.d(TAG, "onDataChange: " + sl);
                 adapter.notifyDataSetChanged();
             }
             @Override

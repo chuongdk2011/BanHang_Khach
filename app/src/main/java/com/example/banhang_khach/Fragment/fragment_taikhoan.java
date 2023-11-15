@@ -124,7 +124,6 @@ public class fragment_taikhoan extends Fragment {
     }
     public void getdata(){
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        Log.d(TAG, "getdata:  đã vào");
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRefId = database.getReference("BillProduct");
         myRefId.addValueEventListener(new ValueEventListener() {
@@ -185,7 +184,6 @@ public class fragment_taikhoan extends Fragment {
             }else{
                 tv_fullname.setText(""+name);
             }
-            Log.e("zzz", "checkUser: "+ name);
         }
         view.findViewById(R.id.btn_dangxuat).setOnClickListener(new View.OnClickListener() {
             @Override

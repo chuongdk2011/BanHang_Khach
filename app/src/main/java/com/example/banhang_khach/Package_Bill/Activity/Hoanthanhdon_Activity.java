@@ -54,7 +54,6 @@ public class Hoanthanhdon_Activity extends AppCompatActivity {
     }
     public void getdata(){
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        Log.d(TAG, "getdata: " + auth.getUid());
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRefId = database.getReference("BillProduct");
         myRefId.addValueEventListener(new ValueEventListener() {

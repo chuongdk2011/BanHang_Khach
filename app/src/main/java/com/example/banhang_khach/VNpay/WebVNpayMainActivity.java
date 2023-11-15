@@ -99,8 +99,6 @@ public class WebVNpayMainActivity extends AppCompatActivity {
                                 vnp_PayDate, vnp_ResponseCode, vnp_TmnCode, vnp_TransactionNo, vnp_TransactionStatus,
                                 vnp_TxnRef, vnp_SecureHash);
                     }else if (loc_activity.equals("cartorderactivity")){
-                        Log.d("log", "buynowactivity: " + loc_activity);
-                        Log.d("log", "buynowactivity: " + (loc_activity.equals("buynowactivity")));
                         DataFromUrl_cartorderactivity(vnp_Amount, vnp_BankCode,vnp_BankTranNo, vnp_CardType, vnp_OrderInfo,
                                 vnp_PayDate, vnp_ResponseCode, vnp_TmnCode, vnp_TransactionNo, vnp_TransactionStatus,
                                 vnp_TxnRef, vnp_SecureHash);
@@ -117,7 +115,8 @@ public class WebVNpayMainActivity extends AppCompatActivity {
             String idthanhtoan = uuid.toString().trim();
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference myRef_thanhtoan = database.getReference("Thanhtoan/" + idthanhtoan);
-            DTO_thanhtoan dtoThanhtoan = new DTO_thanhtoan(idthanhtoan,vnp_Amount, vnp_BankCode,vnp_BankTranNo, vnp_CardType, vnp_OrderInfo,
+            String vnp_Amount100 = String.valueOf(Integer.parseInt(vnp_Amount) / 100);
+            DTO_thanhtoan dtoThanhtoan = new DTO_thanhtoan(idthanhtoan,vnp_Amount100, vnp_BankCode,vnp_BankTranNo, vnp_CardType, vnp_OrderInfo,
                     vnp_PayDate, vnp_ResponseCode, vnp_TmnCode, vnp_TransactionNo, vnp_TransactionStatus,
                     vnp_TxnRef, vnp_SecureHash);
             myRef_thanhtoan.setValue(dtoThanhtoan, new DatabaseReference.CompletionListener() {
@@ -160,7 +159,8 @@ public class WebVNpayMainActivity extends AppCompatActivity {
             String idthanhtoan = uuid.toString().trim();
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference myRef_thanhtoan = database.getReference("Thanhtoan/" + idthanhtoan);
-            DTO_thanhtoan dtoThanhtoan = new DTO_thanhtoan(idthanhtoan,vnp_Amount, vnp_BankCode,vnp_BankTranNo, vnp_CardType, vnp_OrderInfo,
+            String vnp_Amount100 = String.valueOf(Integer.parseInt(vnp_Amount) / 100);
+            DTO_thanhtoan dtoThanhtoan = new DTO_thanhtoan(idthanhtoan,vnp_Amount100, vnp_BankCode,vnp_BankTranNo, vnp_CardType, vnp_OrderInfo,
                     vnp_PayDate, vnp_ResponseCode, vnp_TmnCode, vnp_TransactionNo, vnp_TransactionStatus,
                     vnp_TxnRef, vnp_SecureHash);
             myRef_thanhtoan.setValue(dtoThanhtoan, new DatabaseReference.CompletionListener() {

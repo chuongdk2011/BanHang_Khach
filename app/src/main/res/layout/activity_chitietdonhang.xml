@@ -27,6 +27,126 @@
             android:textStyle="bold"
             />
     </androidx.appcompat.widget.Toolbar>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp">
+                <TextView
+                    android:id="@+id/viewthanhtoan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Phương thức thanh toán: "
+                    android:textStyle="bold"
+                    android:textSize="16dp"/>
+                <TextView
+                    android:id="@+id/tv_hinhthucthanhtoan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Thanh toán khi nhận hàng"
+                    android:layout_alignParentRight="true"
+                    android:textSize="14dp"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp">
+                <TextView
+                    android:id="@+id/viewgiathanhtoan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tổng thanh toán: "
+                    android:textStyle="bold"
+                    android:textSize="16dp"
+                    android:textColor="#AC1313"/>
+                <TextView
+                    android:id="@+id/tv_giathanhtaon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0đ"
+                    android:layout_alignParentRight="true"
+                    android:textColor="#AC1313"
+                    android:textSize="14dp"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="7dp">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/map_24"/>
+        <TextView
+            android:id="@+id/textdiachi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thông tin nhận hàng"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="30dp"
+            android:textStyle="bold"
+            android:textSize="15dp"/>
+        <TextView
+            android:id="@+id/viewhoten"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Họ tên: "
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="30dp"
+            android:layout_below="@+id/textdiachi"/>
+        <TextView
+            android:id="@+id/tv_hoten"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" Nguyễn Văn A"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="80dp"
+            android:layout_below="@+id/textdiachi"
+            android:layout_alignLeft="@+id/viewhoten"/>
+        <TextView
+            android:id="@+id/viewsdt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SDT:(+84) "
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="30dp"
+            android:layout_below="@+id/tv_hoten"/>
+        <TextView
+            android:id="@+id/tv_sdt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" 0123456789"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="100dp"
+            android:layout_below="@+id/tv_hoten"
+            android:layout_alignLeft="@+id/viewhoten"/>
+        <TextView
+            android:id="@+id/viewdiachi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Địa chỉ: "
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="30dp"
+            android:layout_below="@+id/tv_sdt"/>
+        <TextView
+            android:id="@+id/tv_diachi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" phú xuyên hà nội"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="80dp"
+            android:layout_below="@+id/tv_sdt"
+            android:layout_alignLeft="@+id/viewdiachi"/>
+    </RelativeLayout>
     <ListView
         android:id="@+id/lv_hoadon"
         android:layout_width="match_parent"
