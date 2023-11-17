@@ -1,9 +1,9 @@
 package com.example.banhang_khach.VNpay;
 
-public class DTO {
+public class DTO_postdata {
     String message, code, data;
 
-    public DTO() {
+    public DTO_postdata() {
     }
 
     public String getMessage() {
@@ -30,7 +30,7 @@ public class DTO {
         this.data = data;
     }
 
-    public DTO(String message, String code, String data) {
+    public DTO_postdata(String message, String code, String data) {
         this.message = message;
         this.code = code;
         this.data = data;

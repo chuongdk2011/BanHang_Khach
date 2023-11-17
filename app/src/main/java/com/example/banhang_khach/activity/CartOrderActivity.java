@@ -1,7 +1,6 @@
 package com.example.banhang_khach.activity;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,7 +33,7 @@ import com.example.banhang_khach.R;
 import com.example.banhang_khach.VNpay.API;
 import com.example.banhang_khach.VNpay.DTO_vnpay;
 import com.example.banhang_khach.VNpay.Vnpay_Retrofit;
-import com.example.banhang_khach.VNpay.WebVNpayMainActivity;
+import com.example.banhang_khach.VNpay.WebViewThanhtoan;
 import com.example.banhang_khach.Zalopay.Api.CreateOrder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -227,7 +226,7 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
                     DatabaseReference myRef_thanhtoan = database.getReference("Thanhtoan/" + idthanhtoan);
                     Map<String, Object> mapthanhtoan = new HashMap<>();
                     mapthanhtoan.put("idthanhtoan", idthanhtoan);
-                    mapthanhtoan.put("vnp_Amount", tongprice);
+                    mapthanhtoan.put("vnp_Amount", ""+tongprice);
                     mapthanhtoan.put("vnp_CardType", "Thanh toán khi nhận hàng");
                     myRef_thanhtoan.setValue(mapthanhtoan);
 
@@ -438,7 +437,7 @@ public class CartOrderActivity extends AppCompatActivity implements CartOrderAda
                 if(response.isSuccessful()){
                     DTO_vnpay dtoVnpay = response.body();
                     Log.d(TAG, "responseData.getData(): "+ dtoVnpay.getDataurl());
-                    Intent intent = new Intent(getApplicationContext(), WebVNpayMainActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), WebViewThanhtoan.class);
                     intent.putExtra("paymentUrl", dtoVnpay.getDataurl());
                     intent.putExtra("locactivity", "cartorderactivity");
                     startActivity(intent);

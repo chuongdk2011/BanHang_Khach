@@ -1,19 +1,8 @@
 package com.example.banhang_khach.VNpay;
 
 public class DTO_thanhtoan {
-    String idthanhtoan;
-    String vnp_Amount;
-    String vnp_BankCode;
-    String vnp_BankTranNo;
-    String vnp_CardType;
-    String vnp_OrderInfo;
-    String vnp_PayDate;
-    String vnp_ResponseCode;
-    String vnp_TmnCode;
-    String vnp_TransactionNo;
-    String vnp_TransactionStatus;
-    String vnp_TxnRef;
-    String vnp_SecureHash;
+    String idthanhtoan, vnp_Amount, vnp_BankCode, vnp_BankTranNo, vnp_CardType, vnp_OrderInfo, vnp_PayDate, vnp_ResponseCode,
+            vnp_TmnCode, vnp_TransactionNo, vnp_TransactionStatus, vnp_TxnRef, vnp_SecureHash;
 
     public DTO_thanhtoan() {
     }

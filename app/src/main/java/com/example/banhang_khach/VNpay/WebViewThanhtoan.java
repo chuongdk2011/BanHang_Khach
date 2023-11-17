@@ -15,25 +15,18 @@ import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.banhang_khach.DTO.BillDTO;
-import com.example.banhang_khach.DTO.CartOrderDTO;
 import com.example.banhang_khach.DTO.GlobalData_instance;
-import com.example.banhang_khach.DTO.OrderInformationDTO;
 import com.example.banhang_khach.R;
 import com.example.banhang_khach.activity.BuyNow_Activity;
 import com.example.banhang_khach.activity.CartOrderActivity;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.UUID;
 
-public class WebVNpayMainActivity extends AppCompatActivity {
+public class WebViewThanhtoan extends AppCompatActivity {
     private WebView webView;
     ImageView ic_back;
     static String url = API.URL;
@@ -122,7 +115,7 @@ public class WebVNpayMainActivity extends AppCompatActivity {
             myRef_thanhtoan.setValue(dtoThanhtoan, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                    Toast.makeText(WebVNpayMainActivity.this, "Thanh toán thành công", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(WebViewThanhtoan.this, "Thanh toán thành công", Toast.LENGTH_SHORT).show();
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -166,7 +159,7 @@ public class WebVNpayMainActivity extends AppCompatActivity {
             myRef_thanhtoan.setValue(dtoThanhtoan, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                    Toast.makeText(WebVNpayMainActivity.this, "Thanh toán thành công", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(WebViewThanhtoan.this, "Thanh toán thành công", Toast.LENGTH_SHORT).show();
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {

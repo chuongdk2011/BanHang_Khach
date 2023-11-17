@@ -1,7 +1,5 @@
 package com.example.banhang_khach.activity;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,7 +10,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.Gravity;
@@ -33,13 +30,11 @@ import com.example.banhang_khach.DTO.OrderInformationDTO;
 import com.example.banhang_khach.DTO.UserDTO;
 import com.example.banhang_khach.R;
 import com.example.banhang_khach.VNpay.API;
-import com.example.banhang_khach.VNpay.DTO_thanhtoan;
 import com.example.banhang_khach.VNpay.DTO_vnpay;
 import com.example.banhang_khach.VNpay.Vnpay_Retrofit;
-import com.example.banhang_khach.VNpay.WebVNpayMainActivity;
+import com.example.banhang_khach.VNpay.WebViewThanhtoan;
 import com.example.banhang_khach.Zalopay.Api.CreateOrder;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -301,7 +296,7 @@ public class BuyNow_Activity extends AppCompatActivity {
                     DatabaseReference myRef_thanhtoan = database.getReference("Thanhtoan/" + idthanhtoan);
                     Map<String, Object> mapthanhtoan = new HashMap<>();
                     mapthanhtoan.put("idthanhtoan", idthanhtoan);
-                    mapthanhtoan.put("vnp_Amount", tongprice);
+                    mapthanhtoan.put("vnp_Amount", ""+tongprice);
                     mapthanhtoan.put("vnp_CardType", "Thanh toán khi nhận hàng");
                     myRef_thanhtoan.setValue(mapthanhtoan);
 
@@ -451,7 +446,7 @@ public class BuyNow_Activity extends AppCompatActivity {
                 if(response.isSuccessful()){
                     DTO_vnpay dtoVnpay = response.body();
                     Log.d(TAG, "responseData.getData(): "+ dtoVnpay.getDataurl());
-                    Intent intent = new Intent(getApplicationContext(), WebVNpayMainActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), WebViewThanhtoan.class);
                     intent.putExtra("paymentUrl", dtoVnpay.getDataurl());
                     intent.putExtra("locactivity", "buynowactivity");
                     startActivity(intent);
